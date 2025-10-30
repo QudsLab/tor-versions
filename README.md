@@ -7,7 +7,7 @@ Automated tracker for the latest Tor Expert Bundle versions and download links.
 - Automatically scrapes Tor Archive for all available versions
 - Groups downloads by operating system (Windows, macOS, Linux, Android)
 - Filters out debug files, signatures, and other unwanted files
-- Runs automatically every 10 minutes via GitHub Actions
+- Runs automatically every 12 hours via GitHub Actions
 - Provides structured JSON output for easy integration
 
 ## Automation
@@ -15,13 +15,13 @@ Automated tracker for the latest Tor Expert Bundle versions and download links.
 This repository is fully automated:
 
 ### GitHub Actions
-- Runs every 10 minutes via scheduled workflow
+- Runs every 12 hours via scheduled workflow
 - Updates version data automatically
 - Commits and pushes changes to the repository
 
 ### Local Automation (Optional)
 - Use `auto_commit.bat` for local Windows automation
-- Schedule via Windows Task Scheduler to run every 10 minutes
+- Schedule via Windows Task Scheduler to run every 12 hours
 
 ## Direct JSON Access
 
@@ -53,7 +53,7 @@ Access the latest Tor version data directly via these raw GitHub links:
 
 ## Automated Deployment
 
-The repository is configured to automatically update every 10 minutes. No manual intervention required.
+The repository is configured to automatically update every 12 hours. No manual intervention required.
 
 ## Data Structure
 
