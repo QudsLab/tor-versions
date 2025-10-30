@@ -23,6 +23,15 @@ This repository is fully automated:
 - Use `auto_commit.bat` for local Windows automation
 - Schedule via Windows Task Scheduler to run every 10 minutes
 
+## Direct JSON Access
+
+Access the latest Tor version data directly via these raw GitHub links:
+
+- **[All Versions List](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/versions.json)** - Simple array of all discovered Tor version numbers
+- **[Complete Version Data](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/tor-versions.json)** - Full data with download links for each version
+- **[Grouped by OS](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/versions_grouped.json)** - Downloads organized by operating system (Windows, macOS, Linux, Android)
+- **[Blank Versions](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/blanks.json)** - List of versions with no valid download files
+
 ## Output Files
 
 - `data/json/tor-versions.json` - Complete version data with download links
