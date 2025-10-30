@@ -8,16 +8,13 @@ from typing import List, Dict, Any
 
 
 BASE_DIR           = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR           = BASE_DIR + "/data"
 JSON_DIR           = BASE_DIR + "/data/json"
-
+CACHE_DIR          = BASE_DIR + "/data/cache"
 BLANKS             = BASE_DIR + "/data/json/blanks.json"
 VERSIONS           = BASE_DIR + "/data/json/versions.json"
 VERSIONS_LIST      = BASE_DIR + "/data/json/versions_list.json"
 VERSIONS_GROUPED   = BASE_DIR + "/data/json/versions_grouped.json"
-CACHE_DIR          = BASE_DIR + "/data/cache"
-
-DATA_DIR           = BASE_DIR + "/data"
-BASE_FILE          = "torbrowser-versions.txt"
 BASE_URL           = "https://archive.torproject.org/tor-package-archive/torbrowser/"
 
 REMOVER_WORDS      = [
