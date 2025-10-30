@@ -1,4 +1,4 @@
-name: [Daily] Tor Expert Bundle Version Update
+name: "Daily Tor Expert Bundle Version Update"
 
 # Schedule the workflow to run every 10 minutes
 on:
