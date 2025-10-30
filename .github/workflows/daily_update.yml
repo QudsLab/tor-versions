@@ -1,12 +1,16 @@
 name: "Daily Tor Expert Bundle Version Update"
 
-# Schedule the workflow to run every 10 minutes
+# Schedule the workflow to run every 30 minutes
 on:
   schedule:
-    # Runs every 10th minute (e.g., at :00, :10, :20, :30, :40, :50)
-    - cron: '*/2 * * * *' 
+    # Runs every 30th minute (e.g., at :00, :30)
+    - cron: '*/30 * * * *' 
   # Allows you to manually trigger the workflow from the GitHub UI
   workflow_dispatch:
+
+# Grant write permissions to the workflow
+permissions:
+  contents: write
 
 jobs:
   update-tor-versions:
@@ -16,7 +20,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
+        # Use GITHUB_TOKEN with proper permissions
         token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
         
     - name: Set up Python
       uses: actions/setup-python@v4
