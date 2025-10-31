@@ -1,10 +1,11 @@
 # Tor Versions Tracker
 
-Automated tracker for the latest Tor Expert Bundle versions and download links.
+Automated tracker for the latest Tor Expert Bundle and Tor Browser versions with download links.
 
 ## Features
 
 - Automatically scrapes Tor Archive for all available versions
+- **Separates Export Builder and Browser versions** for clean data organization
 - Groups downloads by operating system (Windows, macOS, Linux, Android)
 - Filters out debug files, signatures, and other unwanted files
 - Runs automatically every 12 hours via GitHub Actions
@@ -19,25 +20,35 @@ This repository is fully automated:
 - Updates version data automatically
 - Commits and pushes changes to the repository
 
-### Local Automation (Optional)
-- Use `auto_commit.bat` for local Windows automation
-- Schedule via Windows Task Scheduler to run every 12 hours
-
 ## Direct JSON Access
 
 Access the latest Tor version data directly via these raw GitHub links:
 
-- **[All Versions List](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/versions.json)** - Simple array of all discovered Tor version numbers
-- **[Complete Version Data](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/tor-versions.json)** - Full data with download links for each version
-- **[Grouped by OS](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/versions_grouped.json)** - Downloads organized by operating system (Windows, macOS, Linux, Android)
+### Export Builder Versions
+- **[Export Versions List](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/versions_list.json)** - Simple array of all discovered Tor version numbers
+- **[Export Version Data](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/export_versions.json)** - Export builder files with download links
+- **[Export Grouped by OS](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/export_versions_grouped.json)** - Export files organized by operating system
+
+### Browser Versions
+- **[Browser Version Data](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/browser_versions.json)** - Browser files with download links
+- **[Browser Grouped by OS](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/browser_versions_grouped.json)** - Browser files organized by operating system
+
+### Utility Files
 - **[Blank Versions](https://raw.githubusercontent.com/QudsLab/tor-versions/refs/heads/main/data/json/blanks.json)** - List of versions with no valid download files
 
 ## Output Files
 
-- `data/json/tor-versions.json` - Complete version data with download links
-- `data/json/versions_grouped.json` - Downloads grouped by operating system
+### Export Builder Files
+- `data/json/export_versions.json` - Export builder version data with download links
+- `data/json/export_versions_grouped.json` - Export files grouped by operating system
+
+### Browser Files  
+- `data/json/browser_versions.json` - Browser version data with download links
+- `data/json/browser_versions_grouped.json` - Browser files grouped by operating system
+
+### Utility Files
+- `data/json/versions_list.json` - List of all discovered versions
 - `data/json/blanks.json` - Versions with no valid downloads
-- `data/json/versions.json` - List of all discovered versions
 
 ## Setup
 
@@ -57,7 +68,7 @@ The repository is configured to automatically update every 12 hours. No manual i
 
 ## Data Structure
 
-Each version entry contains:
+### Export Builder Version Entry:
 ```json
 {
   "version": "13.0.1",
@@ -69,3 +80,24 @@ Each version entry contains:
   ]
 }
 ```
+
+### Browser Version Entry:
+```json
+{
+  "version": "13.0.1", 
+  "files": [
+    {
+      "file_name": "torbrowser-install-13.0.1_ALL.exe",
+      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/13.0.1/torbrowser-install-13.0.1_ALL.exe"
+    }
+  ]
+}
+```
+
+## Cache Structure
+
+The project uses an efficient 3-tier cache system:
+
+- `data/cache/all/` - Raw files with minimal filtering (common unwanted files removed)
+- `data/cache/export/` - Export builder specific files  
+- `data/cache/browser/` - Browser specific files

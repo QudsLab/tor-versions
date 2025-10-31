@@ -7,31 +7,45 @@ from typing import List, Dict, Any
 # Removed custom zfill import as Python strings have a built-in zfill method
 
 
-BASE_DIR           = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR           = BASE_DIR + "/data"
-JSON_DIR           = BASE_DIR + "/data/json"
-CACHE_DIR          = BASE_DIR + "/data/cache"
-BLANKS             = BASE_DIR + "/data/json/blanks.json"
-VERSIONS           = BASE_DIR + "/data/json/versions.json"
-VERSIONS_LIST      = BASE_DIR + "/data/json/versions_list.json"
-VERSIONS_GROUPED   = BASE_DIR + "/data/json/versions_grouped.json"
-BASE_URL           = "https://archive.torproject.org/tor-package-archive/torbrowser/"
+BASE_DIR             = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR             = BASE_DIR + "/data"
+JSON_DIR             = BASE_DIR + "/data/json"
+CACHE_DIR            = BASE_DIR + "/data/cache"
+CACHE_ALL_DIR        = BASE_DIR + "/data/cache/all"
+CACHE_EXPORT_DIR     = BASE_DIR + "/data/cache/export"
+CACHE_BROWSER_DIR    = BASE_DIR + "/data/cache/browser"
+BLANKS               = BASE_DIR + "/data/json/blanks.json"
+VERSIONS_LIST        = BASE_DIR + "/data/json/versions_list.json"
+E_VERSIONS           = BASE_DIR + "/data/json/export_versions.json"
+B_VERSIONS           = BASE_DIR + "/data/json/browser_versions.json"
+E_VERSIONS_GROUPED   = BASE_DIR + "/data/json/export_versions_grouped.json"
+B_VERSIONS_GROUPED   = BASE_DIR + "/data/json/browser_versions_grouped.json"
+BASE_URL             = "https://archive.torproject.org/tor-package-archive/torbrowser/"
 
-REMOVER_WORDS      = [
-        "debug", "Debug", "DEBUG",                       # debug files
-        "browser", "Browser", "BROWSER",                 # files which are browser related
-        "?C=N;O=D", "?C=M;O=A", "?C=S;O=A", "?C=D;O=A",  # by mistake added sorting query params
-        "sha256", "SHA256", "Sha256",                    # hash files
-        ".asc", ".ASC", ".Asc",                          # signature files
-        ".txt", ".TXT", ".Txt",                          # text files
-        "mar-tools", "geckodriver", "src-",              # other unrelated files --- type a
-        "/~sysrqb/builds/","tmp.mar","index.html%3fC",   # other unrelated files --- type b
-        "index.html","results","sandbox-",               # other unrelated files --- type c
-    ]
+COMMON_REMOVER_WORDS   = [                           # Common Remover Words
+    "debug", "Debug", "DEBUG",                       # debug files
+    "?C=N;O=D", "?C=M;O=A", "?C=S;O=A", "?C=D;O=A",  # by mistake added sorting query params
+    "sha256", "SHA256", "Sha256",                    # hash files
+    ".asc", ".ASC", ".Asc",                          # signature files
+    ".txt", ".TXT", ".Txt",                          # text files
+    "mar-tools", "geckodriver", "src-",              # other unrelated files --- type a
+    "/~sysrqb/builds/","tmp.mar","index.html%3fC",   # other unrelated files --- type b
+    "index.html","results","sandbox-",               # other unrelated files --- type c
+    "/tor-package-archive/torbrowser/"               # self referencing links
+]
+
+EBV_REMOVER_WORDS = [                                # Export Builder Version Remover Words
+    "browser", "Browser", "BROWSER",                 # files which are browser related
+] + COMMON_REMOVER_WORDS                             # combine with common words
+
+BRV_REMOVER_PREFIXES = [                             # Browser Version Remover Prefixes
+    "tor-win32-", "tor-expert-bundle"               # export builder version files
+]
+
 PATTERNS           = [
-        r"https://archive\.torproject\.org/tor-package-archive/torbrowser/(\d+\.\d+\.\d+)/",
-        r'<a href="([\d\.]+[a-zA-Z0-9\-\_]*)/">',
-        r'<a href="([^"]+)">'
+    r"https://archive\.torproject\.org/tor-package-archive/torbrowser/(\d+\.\d+\.\d+)/",
+    r'<a href="([\d\.]+[a-zA-Z0-9\-\_]*)/">',
+    r'<a href="([^"]+)">'
 ]
 
 def safe_request(url: str, max_retries: int = 3, delay: float = 1.0) -> str:
@@ -50,22 +64,22 @@ def safe_request(url: str, max_retries: int = 3, delay: float = 1.0) -> str:
     return ""
 
 def version_fatched(version: str) -> bool:
-    """Check if version is already fetched and cached."""
-    json_cache = CACHE_DIR + f"/{version}_files.json"
-    return os.path.exists(json_cache)
-    """Check if version is already fetched and cached."""
-    json_cache = CACHE_DIR + f"/{version}_files.json"
+    """Check if version is already fetched and cached in all folder."""
+    json_cache = CACHE_ALL_DIR + f"/{version}.json"
     return os.path.exists(json_cache)
 
-def version_builder() -> List[Dict[str, Any]]:
-    """Build main json with file list and urls list under each version."""
-    version_json = []
-    cache_files = [f for f in os.listdir(CACHE_DIR) if f.endswith("_files.json")]
+def build_export_versions() -> List[Dict[str, Any]]:
+    """Build export versions json from export cache files."""
+    version_json: List[Dict[str, Any]] = []
+    if not os.path.exists(CACHE_EXPORT_DIR):
+        return version_json
+        
+    cache_files = [f for f in os.listdir(CACHE_EXPORT_DIR) if f.endswith(".json")]
     
     for version_file in cache_files:
-        version_number = version_file.replace("_files.json", "")
+        version_number = version_file.replace(".json", "")
         try:
-            with open(os.path.join(CACHE_DIR, version_file), "r") as file:
+            with open(os.path.join(CACHE_EXPORT_DIR, version_file), "r") as file:
                 files = json.load(file)
                 version_data: Dict[str, Any] = {"version": version_number, "files": []}
                 for file_name in files:
@@ -73,12 +87,136 @@ def version_builder() -> List[Dict[str, Any]]:
                     version_data["files"].append({"file_name": file_name, "url": file_url})
                 version_json.append(version_data)
         except (json.JSONDecodeError, FileNotFoundError) as e:
-            print(f"Error reading cache file {version_file}: {e}")
+            print(f"Error reading export cache file {version_file}: {e}")
             continue
     
     # Sort versions naturally
     version_json.sort(key=lambda x: list(map(int, re.findall(r'\d+', x["version"]))))
     return version_json
+
+def build_browser_versions() -> List[Dict[str, Any]]:
+    """Build browser versions json from browser cache files."""
+    version_json: List[Dict[str, Any]] = []
+    if not os.path.exists(CACHE_BROWSER_DIR):
+        return version_json
+        
+    cache_files = [f for f in os.listdir(CACHE_BROWSER_DIR) if f.endswith(".json")]
+    
+    for version_file in cache_files:
+        version_number = version_file.replace(".json", "")
+        try:
+            with open(os.path.join(CACHE_BROWSER_DIR, version_file), "r") as file:
+                files = json.load(file)
+                version_data: Dict[str, Any] = {"version": version_number, "files": []}
+                for file_name in files:
+                    file_url = BASE_URL + version_number + "/" + file_name
+                    version_data["files"].append({"file_name": file_name, "url": file_url})
+                version_json.append(version_data)
+        except (json.JSONDecodeError, FileNotFoundError) as e:
+            print(f"Error reading browser cache file {version_file}: {e}")
+            continue
+    
+    # Sort versions naturally
+    version_json.sort(key=lambda x: list(map(int, re.findall(r'\d+', x["version"]))))
+    return version_json
+
+def process_versions_efficiently(versions: List[str], blank_list: List[str]) -> tuple[List[str], List[str]]:
+    """Process all versions efficiently with single fetch per version."""
+    export_blank_list = []
+    browser_blank_list = []
+    total = len(versions)
+    total_str_len = len(str(total))
+    
+    for count, version in enumerate(versions, 1):
+        count_display = str(count).zfill(total_str_len)
+        
+        try:
+            all_cache_file = CACHE_ALL_DIR + f"/{version}.json"
+            export_cache_file = CACHE_EXPORT_DIR + f"/{version}.json"
+            browser_cache_file = CACHE_BROWSER_DIR + f"/{version}.json"
+            
+            # Check if both export and browser files already exist
+            if os.path.exists(export_cache_file) and os.path.exists(browser_cache_file):
+                print(f"[{count_display}/{total}] {version} - Already processed (E+B)")
+                continue
+            
+            # Check if we need to fetch from network or use existing cache
+            cached_files = []
+            if os.path.exists(all_cache_file):
+                print(f"[{count_display}/{total}] {version} - Using cached data", end="")
+                with open(all_cache_file, "r") as file:
+                    cached_files = json.load(file)
+            else:
+                if version in blank_list:
+                    print(f"[{count_display}/{total}] {version} - In blank list, skipping")
+                    export_blank_list.append(version)
+                    browser_blank_list.append(version)
+                    continue
+                    
+                # Fetch from network
+                print(f"[{count_display}/{total}] {version} - Fetching", end="")
+                url = BASE_URL + version + "/"
+                text = safe_request(url)
+                files = re.findall(PATTERNS[-1], text)
+                
+                # Apply only common filtering for cache
+                for filename in files:
+                    if any(rem_word in filename for rem_word in COMMON_REMOVER_WORDS):
+                        continue
+                    cached_files.append(filename)
+                    
+                if len(cached_files) == 0:
+                    print(f" - No valid files")
+                    export_blank_list.append(version)
+                    browser_blank_list.append(version)
+                    continue
+                    
+                # Save to all cache
+                with open(all_cache_file, "w") as file:
+                    json.dump(cached_files, file, indent=4)
+            
+            # Process export files if not exists
+            export_files = []
+            if not os.path.exists(export_cache_file):
+                for filename in cached_files:
+                    # Remove files that contain export builder remover words
+                    if any(rem_word in filename for rem_word in EBV_REMOVER_WORDS):
+                        continue
+                    export_files.append(filename)
+                    
+                if len(export_files) > 0:
+                    with open(export_cache_file, "w") as file:
+                        json.dump(export_files, file, indent=4)
+                else:
+                    export_blank_list.append(version)
+            
+            # Process browser files if not exists
+            browser_files = []
+            if not os.path.exists(browser_cache_file):
+                for filename in cached_files:
+                    # Remove files that start with browser remover prefixes
+                    if any(filename.startswith(prefix) for prefix in BRV_REMOVER_PREFIXES):
+                        continue
+                    browser_files.append(filename)
+                    
+                if len(browser_files) > 0:
+                    with open(browser_cache_file, "w") as file:
+                        json.dump(browser_files, file, indent=4)
+                else:
+                    browser_blank_list.append(version)
+            
+            # Show results
+            export_count = len(export_files) if export_files else (len(json.load(open(export_cache_file))) if os.path.exists(export_cache_file) else 0)
+            browser_count = len(browser_files) if browser_files else (len(json.load(open(browser_cache_file))) if os.path.exists(browser_cache_file) else 0)
+            print(f" - E:{export_count} B:{browser_count}")
+                
+        except Exception as e:
+            print(f"[{count_display}/{total}] {version} - Error: {e}")
+            export_blank_list.append(version)
+            browser_blank_list.append(version)
+            continue
+    
+    return export_blank_list, browser_blank_list
 
 def version_grouped(data: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, str]]]:
     """Group files by operating system."""
@@ -94,7 +232,6 @@ def version_grouped(data: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, str]
         files = entry["files"]
         for file in files:
             file_name = file["file_name"].lower()
-
             # Check OS compatibility
             if any(x in file_name for x in ["win", "windows"]):
                 grouped['windows'].append(file)
@@ -108,107 +245,116 @@ def version_grouped(data: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, str]
                 grouped['other'].append(file)
     return grouped
 
-# devlopment time code
-# folders
-if not os.path.exists(CACHE_DIR):
-    os.makedirs(CACHE_DIR, exist_ok=True)
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR, exist_ok=True)
-if not os.path.exists(JSON_DIR):
-    os.makedirs(JSON_DIR, exist_ok=True)
-# filrs
-if not os.path.exists(BLANKS):
-    with open(BLANKS, "w") as file:
-        json.dump([], file, indent=4)
-        file.close()
-if not os.path.exists(VERSIONS):
-    with open(VERSIONS, "w") as file:
-        json.dump([], file, indent=4)
-        file.close()
-if not os.path.exists(VERSIONS_LIST):
-    with open(VERSIONS_LIST, "w") as file:
-        json.dump([], file, indent=4)
-        file.close()
-if not os.path.exists(VERSIONS_GROUPED):
-    with open(VERSIONS_GROUPED, "w") as file:
-        json.dump({}, file, indent=4)
-        file.close()
-# end devlopment time code
+# development time code - create directories and initialize files
+try:
+    # Create folders including new cache structure
+    directories = [DATA_DIR, JSON_DIR, CACHE_DIR, CACHE_ALL_DIR, CACHE_EXPORT_DIR, CACHE_BROWSER_DIR]
+    for directory in directories:
+        if not os.path.exists(directory):
+            os.makedirs(directory, exist_ok=True)
+            print(f"Created directory: {directory}")
+    
+    # Initialize JSON files with empty data
+    initial_files: Dict[str, Any] = {
+        BLANKS: [],
+        VERSIONS_LIST: [],
+        E_VERSIONS: [],
+        B_VERSIONS: [],
+        E_VERSIONS_GROUPED: {},
+        B_VERSIONS_GROUPED: {}
+    }
+    
+    for file_path, initial_data in initial_files.items():
+        if not os.path.exists(file_path):
+            with open(file_path, "w") as file:
+                json.dump(initial_data, file, indent=4)
+                print(f"Created file: {file_path}")
+                
+except Exception as e:
+    print(f"Error during initialization: {e}")
+    exit(1)
+# end development time code
 
-# load those 
-with open(BLANKS, "r") as file:
-    blank_list = json.load(file)
+# Load existing blank list
+try:
+    with open(BLANKS, "r") as file:
+        blank_list = json.load(file)
+except (json.JSONDecodeError, FileNotFoundError):
+    blank_list = []
 
-
+# Fetch version list from Tor archive
+print("Fetching version list from Tor archive...")
 versions = []
-for pattern in PATTERNS[:-1]:  # except last pattern
-    try:
+try:
+    for pattern in PATTERNS[:-1]:  # except last pattern
         text = safe_request(BASE_URL)
         versions += re.findall(pattern, text)
-    except requests.exceptions.RequestException as e:
-        print(f"Failed to fetch version list: {e}")
-        continue
-
-with open(VERSIONS_LIST, "w") as file:
+    
     unique_versions = list(set(versions))
     unique_versions.sort(key=lambda s: list(map(int, re.findall(r'\d+', s))))
-    json.dump(unique_versions, file, indent=4)
-    file.write("\n")
+    
+    with open(VERSIONS_LIST, "w") as file:
+        json.dump(unique_versions, file, indent=4)
+        file.write("\n")
+    
+    print(f"Found {len(unique_versions)} unique versions")
+    
+except Exception as e:
+    print(f"Failed to fetch version list: {e}")
+    exit(1)
 
-count = 0
+# Process versions
 with open(VERSIONS_LIST, "r") as file:
     versions = json.load(file)
-    total = len(versions)
-    for version in versions:
-        count += 1
-        count_str = str(count).zfill(len(str(total)))
-        if version_fatched(version):
-            print(f"[{count_str}/{total}] Version {version} already fetched, skipping...")
-            continue
-        if version in blank_list:
-            print(f"[{count_str}/{total}] Version {version} is in blank list, skipping...")
-            continue
-        url = BASE_URL + version + "/"
-        try:
-            text = safe_request(url)
-            files = re.findall(PATTERNS[-1], text)
-        except requests.exceptions.RequestException as e:
-            print(f"[{count_str}/{total}] Failed to fetch files for version {version}: {e}")
-            continue
-        sanitized_files = []
-        for file in files:
-            if any(rem_word in file for rem_word in REMOVER_WORDS):
-                continue
-            sanitized_files.append(file)
-        if len(sanitized_files) == 0:
-            print(f"[{count_str}/{total}] No valid files found for version {version}, skipping...")
-            if version not in blank_list:
-                blank_list.append(version)
-            continue
-        else:
-            print(f"[{count_str}/{total}] Fetched {len(sanitized_files)} files for version {version}")
-        json_cache = CACHE_DIR + f"/{version}_files.json"
-        with open(f"{json_cache}", "w") as file:
-            json.dump(sanitized_files, file, indent=4)
 
-# open version jsons after all fetching is done
-data = version_builder()
+print(f"\nProcessing {len(versions)} versions efficiently...")
+print("=" * 50)
 
-# Save main tor versions data
-with open(VERSIONS, "w") as file:
-    json.dump(data, file, indent=4)
-    file.write("\n")
+# Process all versions with single fetch per version
+export_blank_list, browser_blank_list = process_versions_efficiently(versions, blank_list)
 
-# Save grouped versions data
-with open(VERSIONS_GROUPED, "w") as file:
-    json.dump(version_grouped(data), file, indent=4)
-    file.write("\n")
+# Build final data structures
+print("\n[BUILD] Building final data structures...")
+try:
+    # Build export versions data
+    export_data = build_export_versions()
+    
+    # Build browser versions data  
+    browser_data = build_browser_versions()
+    
+    # Save export versions data
+    with open(E_VERSIONS, "w") as file:
+        json.dump(export_data, file, indent=4)
+        file.write("\n")
+    
+    with open(E_VERSIONS_GROUPED, "w") as file:
+        json.dump(version_grouped(export_data), file, indent=4)
+        file.write("\n")
+    
+    # Save browser versions data
+    with open(B_VERSIONS, "w") as file:
+        json.dump(browser_data, file, indent=4)
+        file.write("\n")
+    
+    with open(B_VERSIONS_GROUPED, "w") as file:
+        json.dump(version_grouped(browser_data), file, indent=4)
+        file.write("\n")
+    
+    # Update blank list with new blanks
+    combined_blanks = list(set(blank_list + export_blank_list + browser_blank_list))
+    with open(BLANKS, "w") as file:
+        json.dump(combined_blanks, file, indent=4)
 
-# write blank versions back
-with open(BLANKS, "w") as file:
-    json.dump(blank_list, file, indent=4)
-
-print(f"\n[m] Completed! Processed {len(data)} versions with data.")
-print(f"[c] Total blank versions: {len(blank_list)}")
-print(f"[i] Main data saved to: {VERSIONS}")
-print(f"[i] Grouped data saved to: {VERSIONS_GROUPED}")
+    print(f"\n[SUMMARY] Processing complete!")
+    print(f"[INFO] Total versions processed: {len(versions)}")
+    print(f"[INFO] Export versions with data: {len(export_data)}")
+    print(f"[INFO] Browser versions with data: {len(browser_data)}")
+    print(f"[INFO] Total blank versions: {len(combined_blanks)}")
+    print(f"[INFO] Export data saved to: {E_VERSIONS}")
+    print(f"[INFO] Export grouped data saved to: {E_VERSIONS_GROUPED}")
+    print(f"[INFO] Browser data saved to: {B_VERSIONS}")
+    print(f"[INFO] Browser grouped data saved to: {B_VERSIONS_GROUPED}")
+    
+except Exception as e:
+    print(f"Error building final data: {e}")
+    exit(1)
