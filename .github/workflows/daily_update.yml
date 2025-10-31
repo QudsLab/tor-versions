@@ -4,7 +4,7 @@ name: "Daily Tor Expert Bundle Version Update"
 on:
   schedule:
     # Runs every 12 hours
-    - cron: '*/720 * * * *' 
+    - cron: '0 */12 * * *'
   # Allows you to manually trigger the workflow from the GitHub UI
   workflow_dispatch:
 
