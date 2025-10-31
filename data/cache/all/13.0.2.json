@@ -1,0 +1,18 @@
+[
+    "tor-browser-android-aarch64-13.0.2.apk",
+    "tor-browser-android-armv7-13.0.2.apk",
+    "tor-browser-android-x86-13.0.2.apk",
+    "tor-browser-android-x86_64-13.0.2.apk",
+    "tor-browser-qa-android-aarch64-13.0.2.apk",
+    "tor-browser-qa-android-aarch64-13.0.2.apk.idsig",
+    "tor-browser-qa-android-armv7-13.0.2.apk",
+    "tor-browser-qa-android-armv7-13.0.2.apk.idsig",
+    "tor-browser-qa-android-x86-13.0.2.apk",
+    "tor-browser-qa-android-x86-13.0.2.apk.idsig",
+    "tor-browser-qa-android-x86_64-13.0.2.apk",
+    "tor-browser-qa-android-x86_64-13.0.2.apk.idsig",
+    "tor-expert-bundle-android-aarch64-13.0.2.tar.gz",
+    "tor-expert-bundle-android-armv7-13.0.2.tar.gz",
+    "tor-expert-bundle-android-x86-13.0.2.tar.gz",
+    "tor-expert-bundle-android-x86_64-13.0.2.tar.gz"
+]

@@ -1,0 +1,14 @@
+[
+    "tor-browser-11.5a5-android-aarch64-androidTest.apk",
+    "tor-browser-11.5a5-android-aarch64-multi-qa.apk",
+    "tor-browser-11.5a5-android-aarch64-multi.apk",
+    "tor-browser-11.5a5-android-armv7-androidTest.apk",
+    "tor-browser-11.5a5-android-armv7-multi-qa.apk",
+    "tor-browser-11.5a5-android-armv7-multi.apk",
+    "tor-browser-11.5a5-android-x86-androidTest.apk",
+    "tor-browser-11.5a5-android-x86-multi-qa.apk",
+    "tor-browser-11.5a5-android-x86-multi.apk",
+    "tor-browser-11.5a5-android-x86_64-androidTest.apk",
+    "tor-browser-11.5a5-android-x86_64-multi-qa.apk",
+    "tor-browser-11.5a5-android-x86_64-multi.apk"
+]

@@ -1,0 +1,23 @@
+[
+    "tor-browser-14.5.9-androidTest.apk.idsig",
+    "tor-browser-android-aarch64-14.5.9.apk",
+    "tor-browser-android-armv7-14.5.9.apk",
+    "tor-browser-android-x86-14.5.9.apk",
+    "tor-browser-android-x86_64-14.5.9.apk",
+    "tor-browser-noopt-android-aarch64-14.5.9.apk.idsig",
+    "tor-browser-noopt-android-armv7-14.5.9.apk.idsig",
+    "tor-browser-noopt-android-x86-14.5.9.apk.idsig",
+    "tor-browser-noopt-android-x86_64-14.5.9.apk.idsig",
+    "tor-browser-qa-android-aarch64-14.5.9.apk",
+    "tor-browser-qa-android-aarch64-14.5.9.apk.idsig",
+    "tor-browser-qa-android-armv7-14.5.9.apk",
+    "tor-browser-qa-android-armv7-14.5.9.apk.idsig",
+    "tor-browser-qa-android-x86-14.5.9.apk",
+    "tor-browser-qa-android-x86-14.5.9.apk.idsig",
+    "tor-browser-qa-android-x86_64-14.5.9.apk",
+    "tor-browser-qa-android-x86_64-14.5.9.apk.idsig",
+    "tor-browser-qa-unsign-android-aarch64-14.5.9.bspatch",
+    "tor-browser-qa-unsign-android-armv7-14.5.9.bspatch",
+    "tor-browser-qa-unsign-android-x86-14.5.9.bspatch",
+    "tor-browser-qa-unsign-android-x86_64-14.5.9.bspatch"
+]
