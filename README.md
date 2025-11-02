@@ -1,3 +1,6 @@
+
+<img width="980" height="480" alt="Screenshot_14" src="https://github.com/user-attachments/assets/f14243f6-8b71-459f-a3a5-8483cb7d45c6" />
+
 # Tor Versions Tracker
 
 Automated tracker for the latest Tor Expert Bundle and Tor Browser versions with download links.
