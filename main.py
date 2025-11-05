@@ -20,6 +20,8 @@ E_VERSIONS           = BASE_DIR + "/data/json/export_versions.json"
 B_VERSIONS           = BASE_DIR + "/data/json/browser_versions.json"
 E_VERSIONS_GROUPED   = BASE_DIR + "/data/json/export_versions_grouped.json"
 B_VERSIONS_GROUPED   = BASE_DIR + "/data/json/browser_versions_grouped.json"
+LB_VERSIONS          = BASE_DIR + "/data/json/latest_browser_versions.json"
+LE_VERSIONS          = BASE_DIR + "/data/json/latest_export_versions.json"
 BASE_URL             = "https://archive.torproject.org/tor-package-archive/torbrowser/"
 
 COMMON_REMOVER_WORDS   = [                           # Common Remover Words
@@ -204,7 +206,7 @@ def process_versions_efficiently(versions: List[str], blank_list: List[str]) -> 
                         json.dump(browser_files, file, indent=4)
                 else:
                     browser_blank_list.append(version)
-            
+
             # Show results
             export_count = len(export_files) if export_files else (len(json.load(open(export_cache_file))) if os.path.exists(export_cache_file) else 0)
             browser_count = len(browser_files) if browser_files else (len(json.load(open(browser_cache_file))) if os.path.exists(browser_cache_file) else 0)
@@ -245,6 +247,16 @@ def version_grouped(data: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, str]
                 grouped['other'].append(file)
     return grouped
 
+def get_latest_version(data: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Get the latest version with its files."""
+    if not data:
+        return {"version": None, "files": []}
+    
+    # Sort by version number and get the last (latest) one
+    sorted_data = sorted(data, key=lambda x: list(map(int, re.findall(r'\d+', x["version"]))))
+    return sorted_data[-1] if sorted_data else {"version": None, "files": []}
+
+
 # development time code - create directories and initialize files
 try:
     # Create folders including new cache structure
@@ -261,7 +273,9 @@ try:
         E_VERSIONS: [],
         B_VERSIONS: [],
         E_VERSIONS_GROUPED: {},
-        B_VERSIONS_GROUPED: {}
+        B_VERSIONS_GROUPED: {},
+        LE_VERSIONS: {},
+        LB_VERSIONS: {}
     }
     
     for file_path, initial_data in initial_files.items():
@@ -340,6 +354,19 @@ try:
         json.dump(version_grouped(browser_data), file, indent=4)
         file.write("\n")
     
+    # Generate latest versions
+    latest_export = get_latest_version(export_data)
+    latest_browser = get_latest_version(browser_data)
+    
+    # Save latest versions data
+    with open(LE_VERSIONS, "w") as file:
+        json.dump(latest_export, file, indent=4)
+        file.write("\n")
+    
+    with open(LB_VERSIONS, "w") as file:
+        json.dump(latest_browser, file, indent=4)
+        file.write("\n")
+    
     # Update blank list with new blanks
     combined_blanks = list(set(blank_list + export_blank_list + browser_blank_list))
     with open(BLANKS, "w") as file:
@@ -354,6 +381,8 @@ try:
     print(f"[INFO] Export grouped data saved to: {E_VERSIONS_GROUPED}")
     print(f"[INFO] Browser data saved to: {B_VERSIONS}")
     print(f"[INFO] Browser grouped data saved to: {B_VERSIONS_GROUPED}")
+    print(f"[INFO] Latest export version: {latest_export['version']} ({len(latest_export['files'])} files) - {LE_VERSIONS}")
+    print(f"[INFO] Latest browser version: {latest_browser['version']} ({len(latest_browser['files'])} files) - {LB_VERSIONS}")
     
 except Exception as e:
     print(f"Error building final data: {e}")
