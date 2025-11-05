@@ -248,12 +248,18 @@ def version_grouped(data: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, str]
     return grouped
 
 def get_latest_version(data: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Get the latest version with its files."""
+    """Get the latest version with its files (only purely numerical versions)."""
     if not data:
         return {"version": None, "files": []}
     
+    # Filter to only include versions that are purely numerical (e.g., "14.0.3", not "14.0.3-alpha")
+    numerical_only = [entry for entry in data if re.match(r'^\d+(\.\d+)*$', entry["version"])]
+    
+    if not numerical_only:
+        return {"version": None, "files": []}
+    
     # Sort by version number and get the last (latest) one
-    sorted_data = sorted(data, key=lambda x: list(map(int, re.findall(r'\d+', x["version"]))))
+    sorted_data = sorted(numerical_only, key=lambda x: list(map(int, re.findall(r'\d+', x["version"]))))
     return sorted_data[-1] if sorted_data else {"version": None, "files": []}
 
 
