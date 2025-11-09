@@ -30,18 +30,37 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Make deamons.sh executable
+      run: chmod +x deamons.sh
+
     - name: Extract daemon versions
       run: |
-        python main.py --extract-daemon-versions
+        # Load the latest export versions
+        python -c "import json; f=open('data/json/latest_export_versions.json'); print(json.dumps(json.load(f)))" > latest_exports.json
+
+        # Iterate over each binary in the latest export versions
+        cat latest_exports.json | jq -r '.files[].url' | while read -r url; do
+          # Download the binary
+          wget "$url" -O binary_file
+
+          # Run the binary with deamons.sh to extract the daemon version
+          DAEMON_VERSION=$(./deamons.sh binary_file)
+
+          # Update the JSON with the daemon version
+          jq --arg url "$url" --arg daemon_version "$DAEMON_VERSION" '.files[] | select(.url == $url) | .daemon_version = $daemon_version' latest_exports.json > tmp.json && mv tmp.json latest_exports.json
+        done
+
+        # Save the updated JSON back to the file
+        mv latest_exports.json data/json/latest_export_versions.json
 
     - name: Commit and push changes
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
+        git add data/json/latest_export_versions.json
         if git diff --staged --quiet; then
           echo "No changes to commit"
         else
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git commit -m "[Auto] Update daemon versions - $(date)"
           git push
         fi
