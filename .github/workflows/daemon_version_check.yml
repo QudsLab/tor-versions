@@ -30,13 +30,13 @@ jobs:
       run: |
         python -c "
 import json
-import os
 
 data_path = 'data/json/latest_export_versions.json'
 with open(data_path, 'r') as f:
     data = json.load(f)
 matrix = [{'file_name': file['file_name'], 'url': file['url']} for file in data['files']]
-print(f'::set-output name=matrix::{json.dumps(matrix)}')
+with open('${{ github.output }}', 'a') as output_file:
+    output_file.write(f'matrix={json.dumps(matrix)}\n')
         "
 
   process:
