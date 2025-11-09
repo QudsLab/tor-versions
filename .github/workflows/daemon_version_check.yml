@@ -39,15 +39,37 @@ jobs:
         python -c "import json; f=open('data/json/latest_export_versions.json'); print(json.dumps(json.load(f)))" > latest_exports.json
 
         # Iterate over each binary in the latest export versions
-        cat latest_exports.json | jq -r '.files[].url' | while read -r url; do
+        cat latest_exports.json | jq -c '.files[]' | while read -r file; do
+          FILE_NAME=$(echo "$file" | jq -r '.file_name')
+          URL=$(echo "$file" | jq -r '.url')
+
+          # Determine the OS and architecture from the file name
+          if [[ "$FILE_NAME" == *"linux"* ]]; then
+            OS="linux"
+          elif [[ "$FILE_NAME" == *"windows"* ]]; then
+            OS="windows"
+          elif [[ "$FILE_NAME" == *"macos"* ]]; then
+            OS="macos"
+          elif [[ "$FILE_NAME" == *"android"* ]]; then
+            OS="android"
+          else
+            echo "Unknown OS for $FILE_NAME"
+            continue
+          fi
+
           # Download the binary
-          wget "$url" -O binary_file
+          wget "$URL" -O binary_file
 
           # Run the binary with deamons.sh to extract the daemon version
           DAEMON_VERSION=$(./deamons.sh binary_file)
 
+          if [[ $? -ne 0 ]]; then
+            echo "Failed to extract daemon version for $FILE_NAME"
+            continue
+          fi
+
           # Update the JSON with the daemon version
-          jq --arg url "$url" --arg daemon_version "$DAEMON_VERSION" '.files[] | select(.url == $url) | .daemon_version = $daemon_version' latest_exports.json > tmp.json && mv tmp.json latest_exports.json
+          jq --arg file_name "$FILE_NAME" --arg daemon_version "$DAEMON_VERSION" '.files[] | select(.file_name == $file_name) | .daemon_version = $daemon_version' latest_exports.json > tmp.json && mv tmp.json latest_exports.json
         done
 
         # Save the updated JSON back to the file
