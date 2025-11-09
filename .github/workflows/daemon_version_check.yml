@@ -25,24 +25,19 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
     - name: Parse JSON and create matrix
       id: parse_json
       run: |
-        import json
-        with open('data/json/latest_export_versions.json', 'r') as f:
-            data = json.load(f)
-        matrix = []
-        for file in data['files']:
-            matrix.append({
-                'file_name': file['file_name'],
-                'url': file['url']
-            })
-        print(f"::set-output name=matrix::{json.dumps(matrix)}")
+        python -c "
+import json
+import os
+
+data_path = 'data/json/latest_export_versions.json'
+with open(data_path, 'r') as f:
+    data = json.load(f)
+matrix = [{'file_name': file['file_name'], 'url': file['url']} for file in data['files']]
+print(f'::set-output name=matrix::{json.dumps(matrix)}')
+        "
 
   process:
     needs: prepare
