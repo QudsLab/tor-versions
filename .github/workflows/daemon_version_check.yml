@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  check-daemon-versions:
+  prepare:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,52 +30,58 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Parse JSON and create matrix
+      id: parse_json
+      run: |
+        import json
+        with open('data/json/latest_export_versions.json', 'r') as f:
+            data = json.load(f)
+        matrix = []
+        for file in data['files']:
+            matrix.append({
+                'file_name': file['file_name'],
+                'url': file['url']
+            })
+        print(f"::set-output name=matrix::{json.dumps(matrix)}")
+
+  process:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        file: ${{ fromJson(needs.prepare.outputs.matrix) }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
     - name: Make deamons.sh executable
       run: chmod +x deamons.sh
 
-    - name: Extract daemon versions
+    - name: Process binary
       run: |
-        # Load the latest export versions
-        python -c "import json; f=open('data/json/latest_export_versions.json'); print(json.dumps(json.load(f)))" > latest_exports.json
+        FILE_NAME=${{ matrix.file.file_name }}
+        URL=${{ matrix.file.url }}
 
-        # Iterate over each binary in the latest export versions
-        cat latest_exports.json | jq -c '.files[]' | while read -r file; do
-          FILE_NAME=$(echo "$file" | jq -r '.file_name')
-          URL=$(echo "$file" | jq -r '.url')
+        # Download the binary
+        wget "$URL" -O binary_file
 
-          # Determine the OS and architecture from the file name
-          if [[ "$FILE_NAME" == *"linux"* ]]; then
-            OS="linux"
-          elif [[ "$FILE_NAME" == *"windows"* ]]; then
-            OS="windows"
-          elif [[ "$FILE_NAME" == *"macos"* ]]; then
-            OS="macos"
-          elif [[ "$FILE_NAME" == *"android"* ]]; then
-            OS="android"
-          else
-            echo "Unknown OS for $FILE_NAME"
-            continue
-          fi
+        # Run the binary with deamons.sh to extract the daemon version
+        DAEMON_VERSION=$(./deamons.sh binary_file)
 
-          # Download the binary
-          wget "$URL" -O binary_file
+        if [[ $? -ne 0 ]]; then
+          echo "Failed to extract daemon version for $FILE_NAME"
+          exit 1
+        fi
 
-          # Run the binary with deamons.sh to extract the daemon version
-          DAEMON_VERSION=$(./deamons.sh binary_file)
-
-          if [[ $? -ne 0 ]]; then
-            echo "Failed to extract daemon version for $FILE_NAME"
-            continue
-          fi
-
-          # Update the JSON with the daemon version
-          jq --arg file_name "$FILE_NAME" --arg daemon_version "$DAEMON_VERSION" '.files[] | select(.file_name == $file_name) | .daemon_version = $daemon_version' latest_exports.json > tmp.json && mv tmp.json latest_exports.json
-        done
-
-        # Save the updated JSON back to the file
-        mv latest_exports.json data/json/latest_export_versions.json
+        # Update the JSON with the daemon version
+        jq --arg file_name "$FILE_NAME" --arg daemon_version "$DAEMON_VERSION" '.files[] | select(.file_name == $file_name) | .daemon_version = $daemon_version' data/json/latest_export_versions.json > tmp.json && mv tmp.json data/json/latest_export_versions.json
 
     - name: Commit and push changes
+      if: ${{ always() }}
       run: |
         git add data/json/latest_export_versions.json
         if git diff --staged --quiet; then
