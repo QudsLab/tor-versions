@@ -1,0 +1,47 @@
+name: "Daemon Version Check"
+
+on:
+  workflow_run:
+    workflows: ["Daily Tor Expert Bundle Version Update"]
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  check-daemon-versions:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Extract daemon versions
+      run: |
+        python main.py --extract-daemon-versions
+
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "[Auto] Update daemon versions - $(date)"
+          git push
+        fi

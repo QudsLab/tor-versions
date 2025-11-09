@@ -3,6 +3,7 @@ import os
 import json
 import requests
 import time
+import subprocess
 from typing import List, Dict, Any
 # Removed custom zfill import as Python strings have a built-in zfill method
 
@@ -262,6 +263,38 @@ def get_latest_version(data: List[Dict[str, Any]]) -> Dict[str, Any]:
     sorted_data = sorted(numerical_only, key=lambda x: list(map(int, re.findall(r'\d+', x["version"]))))
     return sorted_data[-1] if sorted_data else {"version": None, "files": []}
 
+def extract_daemon_version(binary_path: str) -> str:
+    """Run the binary with --version and extract the daemon version using regex."""
+    try:
+        result = subprocess.run([binary_path, "--version"], capture_output=True, text=True, check=True)
+        version_output = result.stdout.strip()
+        match = re.search(r'version\s+(\d+\.\d+\.\d+)', version_output, re.IGNORECASE)
+        if match:
+            return match.group(1)
+        else:
+            print(f"No version found in output: {version_output}")
+            return "unknown"
+    except subprocess.CalledProcessError as e:
+        print(f"Error running binary {binary_path}: {e}")
+        return "error"
+
+def update_latest_export_with_daemon():
+    """Update the latest export list with daemon versions."""
+    try:
+        with open(LE_VERSIONS, "r") as file:
+            latest_export = json.load(file)
+
+        for entry in latest_export.get("files", []):
+            binary_path = os.path.join(CACHE_EXPORT_DIR, entry["file_name"])
+            daemon_version = extract_daemon_version(binary_path)
+            entry["daemon_version"] = daemon_version
+
+        with open(LE_VERSIONS, "w") as file:
+            json.dump(latest_export, file, indent=4)
+
+        print("Updated latest export list with daemon versions.")
+    except Exception as e:
+        print(f"Failed to update daemon versions: {e}")
 
 # development time code - create directories and initialize files
 try:
@@ -393,3 +426,15 @@ try:
 except Exception as e:
     print(f"Error building final data: {e}")
     exit(1)
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--extract-daemon-versions", action="store_true", help="Extract daemon versions for the latest export list.")
+    args = parser.parse_args()
+
+    if args.extract_daemon_versions:
+        update_latest_export_with_daemon()
+    else:
+        pass
