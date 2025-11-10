@@ -19,7 +19,13 @@ from urllib.request import urlretrieve
 
 # Determine current OS
 SYSTEM = platform.system().lower()
-print(f"Running on {SYSTEM}, will process ALL binaries")
+
+# Get OS filter from environment variable (set by GitHub Actions matrix)
+OS_FILTER = os.environ.get('OS_FILTER', '').lower()
+if OS_FILTER:
+    print(f"Running on {SYSTEM}, will process {OS_FILTER} binaries only")
+else:
+    print(f"Running on {SYSTEM}, OS_FILTER not set, processing all binaries")
 
 # Paths
 BASE_DIR = Path(__file__).parent
@@ -99,13 +105,18 @@ def extract_version(tor_binary: Path) -> str | None:
     
     # Check if we can run this binary natively
     can_execute = False
-    if SYSTEM == "linux" and "linux" in str(tor_binary).lower():
-        # Try to run Linux binaries on Linux
+    binary_path_str = str(tor_binary).lower()
+    
+    # Android binaries can't be executed on any platform except Android devices
+    if "android" in binary_path_str or "arm" in binary_path_str:
+        can_execute = False
+    elif SYSTEM == "linux" and "linux" in binary_path_str and "x86_64" in binary_path_str:
+        # Try to run Linux x86_64 binaries on Linux
         can_execute = True
-    elif SYSTEM == "windows" and "windows" in str(tor_binary).lower():
+    elif SYSTEM == "windows" and "windows" in binary_path_str:
         # Try to run Windows binaries on Windows
         can_execute = True
-    elif SYSTEM == "darwin" and "macos" in str(tor_binary).lower():
+    elif SYSTEM == "darwin" and "macos" in binary_path_str:
         # Try to run macOS binaries on macOS
         can_execute = True
     
@@ -154,6 +165,11 @@ def process_binary(file_info: dict, temp_dir: Path) -> str | None:
     
     print(f"\nProcessing: {file_name}")
     
+    # Skip if OS_FILTER is set and this file doesn't match
+    if OS_FILTER and OS_FILTER not in file_name.lower():
+        print(f"  Skipping (not {OS_FILTER})")
+        return None
+    
     # Create temp directory for this file
     file_temp_dir = temp_dir / file_name.replace('.tar.gz', '')
     file_temp_dir.mkdir(exist_ok=True)
@@ -191,13 +207,11 @@ def main():
     files = data.get('files', [])
     print(f"Found {len(files)} files in JSON")
     
-    # Filter files for current OS
-    os_files = [f for f in files if OS_FILTER in f['file_name'].lower()]
-    print(f"Will process {len(os_files)} {OS_FILTER} files")
-    
-    if not os_files:
-        print(f"No {OS_FILTER} files to process")
-        return
+    if OS_FILTER:
+        filtered = [f for f in files if OS_FILTER in f['file_name'].lower()]
+        print(f"Will process {len(filtered)} {OS_FILTER} files")
+    else:
+        print(f"Will process all {len(files)} files")
     
     # Create temp directory
     with tempfile.TemporaryDirectory() as temp_dir:
