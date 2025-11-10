@@ -39,7 +39,8 @@
     },
     {
       "file_name": "tor-expert-bundle-linux-i686.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0/tor-expert-bundle-linux-i686.tar.gz"
+      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0/tor-expert-bundle-linux-i686.tar.gz",
+      "daemon_version": "Error: Could not extract daemon version from output: extracted/tor/tor: error while loading shared libraries: libz.so.1: cannot open shared object file: No such file or directory"
     },
     {
       "file_name": "tor-expert-bundle-linux-x86_64-15.0.tar.gz",
