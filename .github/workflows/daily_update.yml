@@ -100,7 +100,7 @@ jobs:
       - name: Pull latest changes
         run: git pull origin main
       - name: Install tools
-        run: sudo apt-get update && sudo apt-get install -y jq tar gzip
+        run: sudo apt-get update && sudo apt-get install -y jq tar gzip file
       - name: Make deamons.sh executable
         run: chmod +x deamons.sh
       - name: Download and extract binary
@@ -109,37 +109,88 @@ jobs:
         run: |
           FILE_NAME="${{ matrix.file.file_name }}"
           URL="${{ matrix.file.url }}"
-          wget "$URL" -O bundle.tar.gz
-          mkdir extracted
-          tar -xzf bundle.tar.gz -C extracted || true
-          BIN_PATH=$(find extracted -type f -name 'tor' -o -name 'tor.exe' | head -n 1)
-          if [ -z "$BIN_PATH" ]; then
-            echo "No tor binary found in $FILE_NAME"
-            echo "bin_path=" >> $GITHUB_OUTPUT
+          echo "Processing: $FILE_NAME"
+          
+          # Skip Android and macOS binaries (can't run on Linux)
+          if [[ "$FILE_NAME" == *"android"* ]] || [[ "$FILE_NAME" == *"macos"* ]]; then
+            echo "Skipping non-Linux binary: $FILE_NAME"
+            echo "skip=true" >> $GITHUB_OUTPUT
             exit 0
           fi
+          
+          wget -q "$URL" -O bundle.tar.gz
+          mkdir -p extracted
+          tar -xzf bundle.tar.gz -C extracted 2>/dev/null || true
+          
+          # Find tor binary (not tor-gencert, just tor or tor.exe)
+          BIN_PATH=$(find extracted -type f \( -name 'tor' -o -name 'tor.exe' \) ! -name '*gencert*' ! -name '*resolve*' | head -n 1)
+          
+          if [ -z "$BIN_PATH" ]; then
+            echo "No tor binary found in $FILE_NAME"
+            echo "Available files:"
+            find extracted -type f | head -20
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "Found binary: $BIN_PATH"
+          file "$BIN_PATH"
           echo "bin_path=$BIN_PATH" >> $GITHUB_OUTPUT
+          echo "skip=false" >> $GITHUB_OUTPUT
+          
       - name: Extract daemon version
         id: daemon
-        if: steps.extract.outputs.bin_path != ''
+        if: steps.extract.outputs.skip != 'true'
         continue-on-error: true
         run: |
           BIN_PATH="${{ steps.extract.outputs.bin_path }}"
-          if [ ! -x "$BIN_PATH" ]; then chmod +x "$BIN_PATH"; fi
-          DAEMON_VERSION=$(./deamons.sh "$BIN_PATH" || echo "")
+          echo "Extracting version from: $BIN_PATH"
+          
+          if [ -z "$BIN_PATH" ]; then
+            echo "No binary path provided"
+            exit 0
+          fi
+          
+          chmod +x "$BIN_PATH" 2>/dev/null || true
+          
+          # Run deamons.sh to extract version
+          DAEMON_VERSION=$(./deamons.sh "$BIN_PATH" 2>&1 || echo "")
+          
+          echo "Extracted version: '$DAEMON_VERSION'"
+          
+          if [ -z "$DAEMON_VERSION" ]; then
+            echo "Failed to extract version"
+            exit 0
+          fi
+          
           echo "daemon_version=$DAEMON_VERSION" >> $GITHUB_OUTPUT
+          
       - name: Update JSON with daemon version
-        if: steps.daemon.outputs.daemon_version != ''
+        if: steps.daemon.outputs.daemon_version != '' && steps.extract.outputs.skip != 'true'
         run: |
           FILE_NAME="${{ matrix.file.file_name }}"
           DAEMON_VERSION="${{ steps.daemon.outputs.daemon_version }}"
-          jq --arg file_name "$FILE_NAME" --arg daemon_version "$DAEMON_VERSION" '(.files[] | select(.file_name == $file_name)).daemon_version = $daemon_version' data/json/latest_export_versions.json > tmp.json && mv tmp.json data/json/latest_export_versions.json
+          
+          echo "Updating JSON for $FILE_NAME with version $DAEMON_VERSION"
+          
+          jq --arg file_name "$FILE_NAME" --arg daemon_version "$DAEMON_VERSION" \
+            '(.files[] | select(.file_name == $file_name)) |= . + {daemon_version: $daemon_version}' \
+            data/json/latest_export_versions.json > tmp.json && mv tmp.json data/json/latest_export_versions.json
+          
+          echo "JSON updated successfully"
+          cat data/json/latest_export_versions.json | jq '.files[] | select(.file_name == "'$FILE_NAME'")'
+          
       - name: Commit and push changes
-        if: steps.daemon.outputs.daemon_version != ''
+        if: steps.daemon.outputs.daemon_version != '' && steps.extract.outputs.skip != 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add data/json/latest_export_versions.json
-          git diff --staged --quiet || git commit -m "[Auto] Update daemon version for ${{ matrix.file.file_name }}"
-          git pull --rebase origin main
-          git push origin main
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "[Auto] Update daemon version for ${{ matrix.file.file_name }}"
+            git pull --rebase origin main || true
+            git push origin main
+          fi
