@@ -6,6 +6,7 @@ For Linux binaries on Linux, it runs them directly.
 For other binaries, it extracts version from embedded strings in the binary.
 """
 
+import hashlib
 import json
 import os
 import platform
@@ -67,6 +68,20 @@ def find_tor_binary(extract_dir: Path) -> Path | None:
     print(f"  No tor binary found")
     return None
 
+def calculate_binary_hash(tor_binary: Path) -> str | None:
+    """Calculate SHA256 hash of the binary file."""
+    try:
+        sha256_hash = hashlib.sha256()
+        with open(tor_binary, 'rb') as f:
+            for byte_block in iter(lambda: f.read(4096), b""):
+                sha256_hash.update(byte_block)
+        hash_value = sha256_hash.hexdigest()
+        print(f"  [OK] Binary hash: {hash_value}")
+        return hash_value
+    except Exception as e:
+        print(f"  [FAIL] Error calculating hash: {e}")
+        return None
+
 def extract_version_from_binary_strings(tor_binary: Path) -> str | None:
     """Extract version from strings in the binary file (for non-native binaries)."""
     try:
@@ -110,8 +125,8 @@ def extract_version(tor_binary: Path) -> str | None:
     # Android binaries can't be executed on any platform except Android devices
     if "android" in binary_path_str or "arm" in binary_path_str:
         can_execute = False
-    elif SYSTEM == "linux" and "linux" in binary_path_str and "x86_64" in binary_path_str:
-        # Try to run Linux x86_64 binaries on Linux
+    elif SYSTEM == "linux" and "linux" in binary_path_str:
+        # Try to run Linux binaries on Linux (both x86_64 and i686)
         can_execute = True
     elif SYSTEM == "windows" and "windows" in binary_path_str:
         # Try to run Windows binaries on Windows
@@ -122,44 +137,69 @@ def extract_version(tor_binary: Path) -> str | None:
     
     # Try executing if possible
     if can_execute:
-        try:
-            # Make executable on Unix
-            if SYSTEM != "windows":
-                os.chmod(tor_binary, 0o755)
-            
-            print(f"  Running: {tor_binary} --version")
-            result = subprocess.run(
-                [str(tor_binary), "--version"],
-                capture_output=True,
-                text=True,
-                timeout=10
-            )
-            
-            output = result.stdout + result.stderr
-            print(f"  Output: {output[:100]}...")
-            
-            # Extract version using regex: "Tor version 0.4.8.19"
-            version_regex = r'Tor version ([\d\.]+)'
-            match = re.search(version_regex, output)
-            
-            if match:
-                version = match.group(1)
-                print(f"  [OK] Extracted version: {version}")
-                return version
-            else:
-                print(f"  [WARN] Could not extract version from execution, trying binary strings...")
+        # Retry with different methods
+        attempts = []  # type: ignore
+        
+        # For Linux, try with LD_LIBRARY_PATH set to bundled libraries
+        if SYSTEM == "linux":
+            lib_dir = tor_binary.parent  # Libraries are in same dir as binary
+            attempts.append({
+                'env': {'LD_LIBRARY_PATH': str(lib_dir)},
+                'desc': 'with LD_LIBRARY_PATH'
+            })
+        
+        # Default attempt without special env
+        attempts.append({'env': {}, 'desc': 'default'})
+        
+        for attempt in attempts:
+            try:
+                # Make executable on Unix
+                if SYSTEM != "windows":
+                    os.chmod(tor_binary, 0o755)
                 
-        except subprocess.TimeoutExpired:
-            print(f"  [WARN] Timeout running binary, trying binary strings...")
-        except Exception as e:
-            print(f"  [WARN] Error running binary: {e}, trying binary strings...")
+                env = os.environ.copy()
+                env_vars: dict = attempt['env']  # type: ignore
+                if env_vars:
+                    env.update(env_vars)
+                    print(f"  Running: {tor_binary} --version ({attempt['desc']})")
+                else:
+                    print(f"  Running: {tor_binary} --version")
+                
+                result = subprocess.run(
+                    [str(tor_binary), "--version"],
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                    env=env
+                )
+                
+                output = result.stdout + result.stderr
+                print(f"  Output: {output[:100]}...")
+                
+                # Extract version using regex: "Tor version 0.4.8.19"
+                version_regex = r'Tor version ([\d\.]+)'
+                match = re.search(version_regex, output)
+                
+                if match:
+                    version = match.group(1)
+                    print(f"  [OK] Extracted version: {version}")
+                    return version
+                else:
+                    print(f"  [WARN] Could not extract version from execution")
+                    
+            except subprocess.TimeoutExpired:
+                print(f"  [WARN] Timeout running binary ({attempt['desc']})")
+            except Exception as e:
+                print(f"  [WARN] Error running binary ({attempt['desc']}): {e}")
+        
+        print(f"  [INFO] All execution attempts failed, trying binary strings...")
     
     # Fallback: extract from binary strings
     print(f"  Extracting from binary strings (non-native platform)...")
     return extract_version_from_binary_strings(tor_binary)
 
-def process_binary(file_info: dict, temp_dir: Path) -> str | None:
-    """Download, extract, and get version from a binary."""
+def process_binary(file_info: dict, temp_dir: Path) -> dict | None:
+    """Download, extract, and get version and hash from a binary."""
     file_name = file_info['file_name']
     url = file_info['url']
     
@@ -190,9 +230,14 @@ def process_binary(file_info: dict, temp_dir: Path) -> str | None:
     if not tor_binary:
         return None
     
+    # Calculate hash
+    binary_hash = calculate_binary_hash(tor_binary)
+    
     # Extract version
     version = extract_version(tor_binary)
-    return version
+    
+    # Return both version and hash
+    return {'version': version, 'hash': binary_hash}
 
 def main():
     """Main function."""
@@ -232,18 +277,21 @@ def main():
                 continue
             
             # Process the binary
-            version = process_binary(file_info, temp_path)
+            result = process_binary(file_info, temp_path)
             
-            if version:
-                file_info['daemon_version'] = version
+            if result:
+                if result.get('version'):
+                    file_info['daemon_version'] = result['version']
+                if result.get('hash'):
+                    file_info['daemon_hash'] = result['hash']
                 updated_count += 1
             else:
-                print(f"  Failed to extract version")
+                print(f"  Failed to extract version and hash")
     
     # Save updated JSON
     if updated_count > 0:
         print(f"\n{'='*60}")
-        print(f"Updated {updated_count} files with daemon versions")
+        print(f"Updated {updated_count} files with daemon versions and hashes")
         print(f"Saving to {JSON_FILE}")
         
         with open(JSON_FILE, 'w') as f:
