@@ -56,7 +56,7 @@ def extract_archive(archive_path: Path, extract_to: Path) -> bool:
 def find_tor_binary(extract_dir: Path) -> Path | None:
     """Find the tor binary in extracted directory."""
     # Look for 'tor' or 'tor.exe'
-    binary_names = ['tor.exe', 'tor'] if SYSTEM == "windows" else ['tor']
+    binary_names = ['tor.exe', 'tor'] if SYSTEM == "windows" else ['tor', 'libTor.so', 'libtor', 'libtor.so']
     
     for binary_name in binary_names:
         for tor_path in extract_dir.rglob(binary_name):
