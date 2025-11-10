@@ -55,6 +55,7 @@ jobs:
   extract-daemon-versions:
     needs: update-tor-versions
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
@@ -82,11 +83,14 @@ jobs:
           python-version: '3.11'
       
       - name: Extract daemon versions for ${{ matrix.filter }}
+        continue-on-error: true
+        id: extract
         run: python extract_daemon_versions.py
         env:
           OS_FILTER: ${{ matrix.filter }}
       
       - name: Commit and push changes
+        if: steps.extract.outcome == 'success'
         shell: bash
         run: |
           git config --local user.email "action@github.com"
