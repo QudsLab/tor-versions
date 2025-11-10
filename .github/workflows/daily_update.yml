@@ -97,17 +97,15 @@ jobs:
           else
             git commit -m "[Auto] Update ${{ matrix.filter }} daemon versions"
             
-            # Retry push with rebase up to 5 times to handle parallel job conflicts
-            MAX_RETRIES=5
+            # Retry push with rebase up to 10 times to handle parallel job conflicts
+            MAX_RETRIES=10
             RETRY_COUNT=0
+            
             while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
               echo "Attempt $((RETRY_COUNT + 1)) of $MAX_RETRIES"
               
               # Pull with rebase
-              git pull --rebase origin main
-              
-              # Check if there are conflicts
-              if [ $? -eq 0 ]; then
+              if git pull --rebase origin main; then
                 # No conflicts, try to push
                 if git push origin main; then
                   echo "Successfully pushed changes"
@@ -119,20 +117,30 @@ jobs:
                 # Rebase failed due to conflicts
                 echo "Conflict detected, resolving..."
                 
-                # Accept incoming changes for conflicted files and re-apply our changes
-                git checkout --theirs data/json/latest_export_versions.json
-                git add data/json/latest_export_versions.json
+                # Abort the failed rebase
+                git rebase --abort
+                
+                # Fetch latest changes
+                git fetch origin main
+                
+                # Reset to latest main
+                git reset --hard origin/main
                 
                 # Re-run the script to apply our changes on top of latest
                 python extract_daemon_versions.py
-                git add data/json/latest_export_versions.json
                 
-                # Continue rebase
-                git rebase --continue || true
+                # Stage and commit again
+                git add data/json/latest_export_versions.json
+                if ! git diff --staged --quiet; then
+                  git commit -m "[Auto] Update ${{ matrix.filter }} daemon versions"
+                else
+                  echo "No changes to commit after re-run"
+                  exit 0
+                fi
               fi
               
               RETRY_COUNT=$((RETRY_COUNT + 1))
-              sleep $((RETRY_COUNT * 2))
+              sleep $((RETRY_COUNT * 3))
             done
             
             echo "Failed to push after $MAX_RETRIES attempts"
