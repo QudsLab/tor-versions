@@ -76,7 +76,8 @@
     },
     {
       "file_name": "tor-expert-bundle-windows-i686.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0/tor-expert-bundle-windows-i686.tar.gz"
+      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0/tor-expert-bundle-windows-i686.tar.gz",
+      "daemon_version": "Error: Could not extract daemon version from output: ./deamons.sh: line 25: extracted/tor/tor.exe: cannot execute binary file: Exec format error"
     },
     {
       "file_name": "tor-expert-bundle-windows-x86_64-15.0.tar.gz",
