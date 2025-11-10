@@ -72,16 +72,16 @@ jobs:
       - name: Generate matrix from JSON
         id: set-matrix
         run: |
-          python3 <<EOF
-import json
-import os
-with open('data/json/latest_export_versions.json') as f:
-    data = json.load(f)
-files = data.get('files', [])
-matrix = [{"file_name": f["file_name"], "url": f["url"]} for f in files]
-with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
-    out.write(f"matrix={json.dumps(matrix)}\n")
-EOF
+          python3 -c "
+          import json
+          import os
+          with open('data/json/latest_export_versions.json') as f:
+              data = json.load(f)
+          files = data.get('files', [])
+          matrix = [{'file_name': f['file_name'], 'url': f['url']} for f in files]
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write(f'matrix={json.dumps(matrix)}\n')
+          "
 
   daemon-version:
     needs: build-matrix
