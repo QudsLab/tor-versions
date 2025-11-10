@@ -50,6 +50,7 @@ jobs:
         else
           git commit -m "[Auto] Update Tor versions data - $(date)"
           git push
+        fi
 
   extract-daemon-versions-linux:
     needs: update-tor-versions
