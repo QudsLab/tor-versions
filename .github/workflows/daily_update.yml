@@ -52,35 +52,49 @@ jobs:
           git push
         fi
 
-  extract-all-daemon-versions:
+  extract-daemon-versions:
     needs: update-tor-versions
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            filter: linux
+          - os: windows-latest
+            filter: windows
+          - os: macos-latest
+            filter: macos
+          - os: ubuntu-latest
+            filter: android
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: main
+      
       - name: Pull latest changes
         run: git pull origin main
+      
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y qemu-user-static
-      - name: Extract daemon versions for all binaries
-        run: python3 extract_daemon_versions.py
+      
+      - name: Extract daemon versions for ${{ matrix.filter }}
+        run: python extract_daemon_versions.py
+        env:
+          OS_FILTER: ${{ matrix.filter }}
+      
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git pull --rebase origin main
           git add data/json/latest_export_versions.json
           if git diff --staged --quiet; then
             echo "No daemon versions updated"
           else
-            git commit -m "[Auto] Update daemon versions for all platforms"
+            git commit -m "[Auto] Update ${{ matrix.filter }} daemon versions"
             git push origin main
           fi
