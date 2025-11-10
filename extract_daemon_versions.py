@@ -271,9 +271,12 @@ def main():
             if OS_FILTER and OS_FILTER not in file_name.lower():
                 continue
             
-            # Skip if already has daemon_version
-            if 'daemon_version' in file_info and file_info['daemon_version'] and not file_info['daemon_version'].startswith('Error'):
-                print(f"\n{file_name}: Already has version {file_info['daemon_version']}")
+            # Skip if already has both daemon_version AND daemon_hash
+            has_version = 'daemon_version' in file_info and file_info['daemon_version']
+            has_hash = 'daemon_hash' in file_info and file_info['daemon_hash']
+            
+            if has_version and has_hash:
+                print(f"\n{file_name}: Already has version {file_info['daemon_version']} and hash")
                 continue
             
             # Process the binary
