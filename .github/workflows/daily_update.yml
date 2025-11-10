@@ -52,7 +52,7 @@ jobs:
           git push
         fi
 
-  extract-daemon-versions-linux:
+  extract-all-daemon-versions:
     needs: update-tor-versions
     runs-on: ubuntu-latest
     steps:
@@ -67,7 +67,11 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      - name: Extract daemon versions for Linux binaries
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+      - name: Extract daemon versions for all binaries
         run: python3 extract_daemon_versions.py
       - name: Commit and push changes
         run: |
@@ -75,67 +79,8 @@ jobs:
           git config --local user.name "GitHub Action"
           git add data/json/latest_export_versions.json
           if git diff --staged --quiet; then
-            echo "No changes for Linux binaries"
+            echo "No daemon versions updated"
           else
-            git commit -m "[Auto] Update Linux daemon versions"
-            git push origin main
-          fi
-
-  extract-daemon-versions-windows:
-    needs: extract-daemon-versions-linux
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ref: main
-      - name: Pull latest changes
-        run: git pull origin main
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      - name: Extract daemon versions for Windows binaries
-        run: python extract_daemon_versions.py
-      - name: Commit and push changes
-        shell: bash
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add data/json/latest_export_versions.json
-          if git diff --staged --quiet; then
-            echo "No changes for Windows binaries"
-          else
-            git commit -m "[Auto] Update Windows daemon versions"
-            git push origin main
-          fi
-
-  extract-daemon-versions-macos:
-    needs: extract-daemon-versions-windows
-    runs-on: macos-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ref: main
-      - name: Pull latest changes
-        run: git pull origin main
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      - name: Extract daemon versions for macOS binaries
-        run: python3 extract_daemon_versions.py
-      - name: Commit and push changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add data/json/latest_export_versions.json
-          if git diff --staged --quiet; then
-            echo "No changes for macOS binaries"
-          else
-            git commit -m "[Auto] Update macOS daemon versions"
+            git commit -m "[Auto] Update daemon versions for all platforms"
             git push origin main
           fi
