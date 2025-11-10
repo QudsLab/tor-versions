@@ -83,7 +83,7 @@ jobs:
               out.write(f'matrix={json.dumps(matrix)}\n')
           "
 
-  daemon-version:
+  daemon-version-linux:
     needs: build-matrix
     runs-on: ubuntu-latest
     strategy:
@@ -111,9 +111,9 @@ jobs:
           URL="${{ matrix.file.url }}"
           echo "Processing: $FILE_NAME"
           
-          # Skip Android and macOS binaries (can't run on Linux)
-          if [[ "$FILE_NAME" == *"android"* ]] || [[ "$FILE_NAME" == *"macos"* ]]; then
-            echo "Skipping non-Linux binary: $FILE_NAME"
+          # Only process Linux binaries on this runner
+          if [[ ! "$FILE_NAME" =~ "linux" ]]; then
+            echo "Skipping non-Linux binary: $FILE_NAME (will be processed on appropriate runner)"
             echo "skip=true" >> $GITHUB_OUTPUT
             exit 0
           fi
@@ -179,6 +179,224 @@ jobs:
           
           echo "JSON updated successfully"
           cat data/json/latest_export_versions.json | jq '.files[] | select(.file_name == "'$FILE_NAME'")'
+          
+      - name: Commit and push changes
+        if: steps.daemon.outputs.daemon_version != '' && steps.extract.outputs.skip != 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/json/latest_export_versions.json
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "[Auto] Update daemon version for ${{ matrix.file.file_name }}"
+            git pull --rebase origin main || true
+            git push origin main
+          fi
+
+  daemon-version-windows:
+    needs: build-matrix
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        file: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+      - name: Pull latest changes
+        run: git pull origin main
+      - name: Download and extract binary
+        id: extract
+        continue-on-error: true
+        shell: bash
+        run: |
+          FILE_NAME="${{ matrix.file.file_name }}"
+          URL="${{ matrix.file.url }}"
+          echo "Processing: $FILE_NAME"
+          
+          # Only process Windows binaries on this runner
+          if [[ ! "$FILE_NAME" =~ "windows" ]]; then
+            echo "Skipping non-Windows binary: $FILE_NAME"
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          curl -L "$URL" -o bundle.tar.gz
+          mkdir -p extracted
+          tar -xzf bundle.tar.gz -C extracted 2>/dev/null || true
+          
+          # Find tor.exe binary
+          BIN_PATH=$(find extracted -type f -name 'tor.exe' | head -n 1)
+          
+          if [ -z "$BIN_PATH" ]; then
+            echo "No tor.exe binary found in $FILE_NAME"
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "Found binary: $BIN_PATH"
+          echo "bin_path=$BIN_PATH" >> $GITHUB_OUTPUT
+          echo "skip=false" >> $GITHUB_OUTPUT
+          
+      - name: Extract daemon version
+        id: daemon
+        if: steps.extract.outputs.skip != 'true'
+        continue-on-error: true
+        shell: bash
+        run: |
+          BIN_PATH="${{ steps.extract.outputs.bin_path }}"
+          
+          if [ -z "$BIN_PATH" ]; then
+            echo "No binary path provided"
+            exit 0
+          fi
+          
+          # Run binary to get version
+          VERSION_OUTPUT=$("$BIN_PATH" --version 2>&1 || echo "")
+          echo "Version output: $VERSION_OUTPUT"
+          
+          # Extract version using grep
+          DAEMON_VERSION=$(echo "$VERSION_OUTPUT" | grep -oP 'Tor version \K\d+\.\d+\.\d+\.\d+' | head -n 1)
+          
+          if [ -z "$DAEMON_VERSION" ]; then
+            DAEMON_VERSION=$(echo "$VERSION_OUTPUT" | grep -oP '\d+\.\d+\.\d+\.\d+' | head -n 1)
+          fi
+          
+          if [ -z "$DAEMON_VERSION" ]; then
+            echo "Failed to extract version"
+            exit 0
+          fi
+          
+          echo "Extracted version: $DAEMON_VERSION"
+          echo "daemon_version=$DAEMON_VERSION" >> $GITHUB_OUTPUT
+          
+      - name: Update JSON with daemon version
+        if: steps.daemon.outputs.daemon_version != '' && steps.extract.outputs.skip != 'true'
+        shell: bash
+        run: |
+          FILE_NAME="${{ matrix.file.file_name }}"
+          DAEMON_VERSION="${{ steps.daemon.outputs.daemon_version }}"
+          
+          echo "Updating JSON for $FILE_NAME with version $DAEMON_VERSION"
+          
+          jq --arg file_name "$FILE_NAME" --arg daemon_version "$DAEMON_VERSION" \
+            '(.files[] | select(.file_name == $file_name)) |= . + {daemon_version: $daemon_version}' \
+            data/json/latest_export_versions.json > tmp.json && mv tmp.json data/json/latest_export_versions.json
+          
+      - name: Commit and push changes
+        if: steps.daemon.outputs.daemon_version != '' && steps.extract.outputs.skip != 'true'
+        shell: bash
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/json/latest_export_versions.json
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "[Auto] Update daemon version for ${{ matrix.file.file_name }}"
+            git pull --rebase origin main || true
+            git push origin main
+          fi
+
+  daemon-version-macos:
+    needs: build-matrix
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        file: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+      - name: Pull latest changes
+        run: git pull origin main
+      - name: Download and extract binary
+        id: extract
+        continue-on-error: true
+        run: |
+          FILE_NAME="${{ matrix.file.file_name }}"
+          URL="${{ matrix.file.url }}"
+          echo "Processing: $FILE_NAME"
+          
+          # Only process macOS binaries on this runner
+          if [[ ! "$FILE_NAME" =~ "macos" ]]; then
+            echo "Skipping non-macOS binary: $FILE_NAME"
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          curl -L "$URL" -o bundle.tar.gz
+          mkdir -p extracted
+          tar -xzf bundle.tar.gz -C extracted 2>/dev/null || true
+          
+          # Find tor binary
+          BIN_PATH=$(find extracted -type f -name 'tor' ! -name '*gencert*' ! -name '*resolve*' | head -n 1)
+          
+          if [ -z "$BIN_PATH" ]; then
+            echo "No tor binary found in $FILE_NAME"
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "Found binary: $BIN_PATH"
+          echo "bin_path=$BIN_PATH" >> $GITHUB_OUTPUT
+          echo "skip=false" >> $GITHUB_OUTPUT
+          
+      - name: Extract daemon version
+        id: daemon
+        if: steps.extract.outputs.skip != 'true'
+        continue-on-error: true
+        run: |
+          BIN_PATH="${{ steps.extract.outputs.bin_path }}"
+          
+          if [ -z "$BIN_PATH" ]; then
+            echo "No binary path provided"
+            exit 0
+          fi
+          
+          chmod +x "$BIN_PATH"
+          
+          # Run binary to get version
+          VERSION_OUTPUT=$("$BIN_PATH" --version 2>&1 || echo "")
+          echo "Version output: $VERSION_OUTPUT"
+          
+          # Extract version
+          DAEMON_VERSION=$(echo "$VERSION_OUTPUT" | grep -oE 'Tor version [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
+          
+          if [ -z "$DAEMON_VERSION" ]; then
+            DAEMON_VERSION=$(echo "$VERSION_OUTPUT" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
+          fi
+          
+          if [ -z "$DAEMON_VERSION" ]; then
+            echo "Failed to extract version"
+            exit 0
+          fi
+          
+          echo "Extracted version: $DAEMON_VERSION"
+          echo "daemon_version=$DAEMON_VERSION" >> $GITHUB_OUTPUT
+          
+      - name: Update JSON with daemon version
+        if: steps.daemon.outputs.daemon_version != '' && steps.extract.outputs.skip != 'true'
+        run: |
+          FILE_NAME="${{ matrix.file.file_name }}"
+          DAEMON_VERSION="${{ steps.daemon.outputs.daemon_version }}"
+          
+          echo "Updating JSON for $FILE_NAME with version $DAEMON_VERSION"
+          
+          jq --arg file_name "$FILE_NAME" --arg daemon_version "$DAEMON_VERSION" \
+            '(.files[] | select(.file_name == $file_name)) |= . + {daemon_version: $daemon_version}' \
+            data/json/latest_export_versions.json > tmp.json && mv tmp.json data/json/latest_export_versions.json
           
       - name: Commit and push changes
         if: steps.daemon.outputs.daemon_version != '' && steps.extract.outputs.skip != 'true'
