@@ -45,24 +45,46 @@ def find_tor_binary(extract_dir: Path) -> Path | None:
     binary_names = [
         'tor/tor',           # Linux/macOS
         'tor/tor.exe',       # Windows
-        'tor/libtor.so',     # Android
+        'tor/libtor.so',     # Android shared library
         'tor.real',          # Some variants
         'Tor/tor',           # Case variation
     ]
     
+    # First try common paths
     for binary_name in binary_names:
         binary_path = extract_dir / binary_name
         if binary_path.exists():
             print(f"  Found binary: {binary_path}")
             return binary_path
     
-    # Fallback: search for any file named 'tor' or 'tor.exe'
+    # Fallback: search for any tor-related binary file
+    print(f"  Searching for tor binary in {extract_dir}...")
     for root, dirs, files in os.walk(extract_dir):
         for file in files:
-            if file in ['tor', 'tor.exe', 'libtor.so']:
+            file_lower = file.lower()
+            # Look for tor executable or library
+            if file_lower in ['tor', 'tor.exe', 'libtor.so', 'tor.real']:
                 binary_path = Path(root) / file
                 print(f"  Found binary: {binary_path}")
                 return binary_path
+            # Android may have libtor.so or tor.so
+            if file_lower.endswith('.so') and 'tor' in file_lower:
+                binary_path = Path(root) / file
+                print(f"  Found binary: {binary_path}")
+                return binary_path
+    
+    # If still not found, list all files to debug
+    print(f"  [DEBUG] Listing all files in extraction:")
+    all_files = []
+    for root, dirs, files in os.walk(extract_dir):
+        for file in files:
+            rel_path = Path(root).relative_to(extract_dir) / file
+            all_files.append(str(rel_path))
+            if len(all_files) <= 20:  # Show first 20 files
+                print(f"    - {rel_path}")
+    
+    if len(all_files) > 20:
+        print(f"    ... and {len(all_files) - 20} more files")
     
     print(f"  [FAIL] Could not find tor binary")
     return None
