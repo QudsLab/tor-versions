@@ -93,17 +93,17 @@ def extract_version(tor_binary: Path) -> str | None:
         
         if match:
             version = match.group(1)
-            print(f"  ✓ Extracted version: {version}")
+            print(f"  [OK] Extracted version: {version}")
             return version
         else:
-            print(f"  ✗ Could not extract version from output")
+            print(f"  [FAIL] Could not extract version from output")
             return None
             
     except subprocess.TimeoutExpired:
-        print(f"  ✗ Timeout running binary")
+        print(f"  [FAIL] Timeout running binary")
         return None
     except Exception as e:
-        print(f"  ✗ Error running binary: {e}")
+        print(f"  [FAIL] Error running binary: {e}")
         return None
 
 def process_binary(file_info: dict, temp_dir: Path) -> str | None:
@@ -200,7 +200,7 @@ def main():
             json.dump(data, f, indent=2)
             f.write('\n')
         
-        print("✓ JSON file updated successfully")
+        print("[OK] JSON file updated successfully")
     else:
         print("\nNo files were updated")
 
