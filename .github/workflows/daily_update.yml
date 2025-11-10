@@ -91,11 +91,11 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git pull --rebase origin main
           git add data/json/latest_export_versions.json
           if git diff --staged --quiet; then
             echo "No daemon versions updated"
           else
+            git pull --rebase origin main
             git commit -m "[Auto] Update ${{ matrix.filter }} daemon versions"
             git push origin main
           fi
