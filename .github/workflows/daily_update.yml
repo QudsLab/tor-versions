@@ -150,3 +150,37 @@ jobs:
             echo "Failed to push after $MAX_RETRIES attempts"
             exit 1
           fi
+
+  calculate-all-hashes:
+    needs: extract-daemon-versions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+      
+      - name: Pull latest changes
+        run: git pull origin main
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Calculate hashes for all binaries
+        run: python calculate_binary_hashes.py
+      
+      - name: Commit and push hash updates
+        shell: bash
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/json/latest_export_versions.json
+          if git diff --staged --quiet; then
+            echo "No hash updates"
+          else
+            git commit -m "[Auto] Update binary hashes (MD5 & SHA256)"
+            git push origin main
+          fi
