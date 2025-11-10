@@ -267,8 +267,8 @@ def main():
         for file_info in files:
             file_name = file_info['file_name']
             
-            # Skip if not for current OS
-            if OS_FILTER not in file_name.lower():
+            # Skip if OS_FILTER is set and doesn't match
+            if OS_FILTER and OS_FILTER not in file_name.lower():
                 continue
             
             # Skip if already has daemon_version
