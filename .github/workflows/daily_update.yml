@@ -95,7 +95,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No daemon versions updated"
           else
-            git pull --rebase origin main
             git commit -m "[Auto] Update ${{ matrix.filter }} daemon versions"
+            git pull --rebase origin main
             git push origin main
           fi
