@@ -66,7 +66,8 @@
     },
     {
       "file_name": "tor-expert-bundle-macos-x86_64.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0/tor-expert-bundle-macos-x86_64.tar.gz"
+      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0/tor-expert-bundle-macos-x86_64.tar.gz",
+      "daemon_version": "0.4.8.19"
     },
     {
       "file_name": "tor-expert-bundle-windows-i686-15.0.tar.gz",
