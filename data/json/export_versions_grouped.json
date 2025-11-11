@@ -2277,6 +2277,14 @@
             "url": "https://archive.torproject.org/tor-package-archive/torbrowser/13.5.23/tor-expert-bundle-windows-x86_64-13.5.23.tar.gz"
         },
         {
+            "file_name": "tor-expert-bundle-windows-i686-13.5.24.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/13.5.24/tor-expert-bundle-windows-i686-13.5.24.tar.gz"
+        },
+        {
+            "file_name": "tor-expert-bundle-windows-x86_64-13.5.24.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/13.5.24/tor-expert-bundle-windows-x86_64-13.5.24.tar.gz"
+        },
+        {
             "file_name": "tor-expert-bundle-windows-i686-14.0.tar.gz",
             "url": "https://archive.torproject.org/tor-package-archive/torbrowser/14.0/tor-expert-bundle-windows-i686-14.0.tar.gz"
         },
@@ -3225,6 +3233,14 @@
         {
             "file_name": "tor-expert-bundle-macos-x86_64-13.5.23.tar.gz",
             "url": "https://archive.torproject.org/tor-package-archive/torbrowser/13.5.23/tor-expert-bundle-macos-x86_64-13.5.23.tar.gz"
+        },
+        {
+            "file_name": "tor-expert-bundle-macos-aarch64-13.5.24.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/13.5.24/tor-expert-bundle-macos-aarch64-13.5.24.tar.gz"
+        },
+        {
+            "file_name": "tor-expert-bundle-macos-x86_64-13.5.24.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/13.5.24/tor-expert-bundle-macos-x86_64-13.5.24.tar.gz"
         },
         {
             "file_name": "tor-expert-bundle-macos-aarch64-14.0.tar.gz",
