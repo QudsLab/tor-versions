@@ -1,0 +1,11 @@
+[
+    "tor-expert-bundle-android-aarch64-16.0a2.tar.gz",
+    "tor-expert-bundle-android-armv7-16.0a2.tar.gz",
+    "tor-expert-bundle-android-x86_64-16.0a2.tar.gz",
+    "tor-expert-bundle-linux-aarch64-16.0a2.tar.gz",
+    "tor-expert-bundle-linux-x86_64-16.0a2.tar.gz",
+    "tor-expert-bundle-macos-aarch64-16.0a2.tar.gz",
+    "tor-expert-bundle-macos-x86_64-16.0a2.tar.gz",
+    "tor-expert-bundle-windows-i686-16.0a2.tar.gz",
+    "tor-expert-bundle-windows-x86_64-16.0a2.tar.gz"
+]
