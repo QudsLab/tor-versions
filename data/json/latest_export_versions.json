@@ -35,11 +35,15 @@
     },
     {
       "file_name": "tor-expert-bundle-windows-i686-15.0.10.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.10/tor-expert-bundle-windows-i686-15.0.10.tar.gz"
+      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.10/tor-expert-bundle-windows-i686-15.0.10.tar.gz",
+      "daemon_version": "0.4.9.6",
+      "daemon_hash": "0375a91e06477ba53538939ede3315bbc0eb0c6dae3cb701500ba8ba0b0b7087"
     },
     {
       "file_name": "tor-expert-bundle-windows-x86_64-15.0.10.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.10/tor-expert-bundle-windows-x86_64-15.0.10.tar.gz"
+      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.10/tor-expert-bundle-windows-x86_64-15.0.10.tar.gz",
+      "daemon_version": "0.4.9.6",
+      "daemon_hash": "a028d058c4d49cf0df10fe6069e4c8fe177d8996414550c6f10c1a97ee24a620"
     }
   ]
 }
