@@ -1,69 +1,45 @@
 {
-  "version": "15.0.16",
-  "files": [
-    {
-      "file_name": "tor-expert-bundle-android-aarch64-15.0.16.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-android-aarch64-15.0.16.tar.gz",
-      "binary_md5": "e4006228cd31eff53de4c963db3478ad",
-      "binary_sha256": "eeee513adc3755459a29c76fc60f2270711b954c57d56f63a2130454500559ac"
-    },
-    {
-      "file_name": "tor-expert-bundle-android-armv7-15.0.16.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-android-armv7-15.0.16.tar.gz",
-      "binary_md5": "f0467bdee659e3d0610f06a96fa90bf2",
-      "binary_sha256": "114d7e3ff8eb03e1a62a58782ea989c9912b66157f7c2de1696af11e11d4237a"
-    },
-    {
-      "file_name": "tor-expert-bundle-android-x86-15.0.16.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-android-x86-15.0.16.tar.gz",
-      "binary_md5": "6e5e9918290b2e9e2c8b3014a0c67832",
-      "binary_sha256": "e269870bc6df9d0109996d6993a09fd889a623e2ae42f313318c3d31df3e7d33"
-    },
-    {
-      "file_name": "tor-expert-bundle-android-x86_64-15.0.16.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-android-x86_64-15.0.16.tar.gz",
-      "binary_md5": "df119dcf82d31e85a60dc36a464bf1e6",
-      "binary_sha256": "b65c99981e0c7f1784890c102b125d7d5f0962ffdfe5becaa930e564a888356e"
-    },
-    {
-      "file_name": "tor-expert-bundle-linux-i686-15.0.16.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-linux-i686-15.0.16.tar.gz",
-      "binary_md5": "3816541c731976ed80b8ea763670fa8b",
-      "binary_sha256": "3cda98b020d84d1487f19d554e5b0deef4e59957d5261e8e85cc0f66aa39755f"
-    },
-    {
-      "file_name": "tor-expert-bundle-linux-x86_64-15.0.16.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-linux-x86_64-15.0.16.tar.gz",
-      "binary_md5": "13548f522ecfa65bf7aee1b99553f4bb",
-      "binary_sha256": "beabd60ddbbba28614c678bafbb4da28be8b15b9d5d24130ec0f4fc07ed75021"
-    },
-    {
-      "file_name": "tor-expert-bundle-macos-aarch64-15.0.16.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-macos-aarch64-15.0.16.tar.gz",
-      "binary_md5": "d72134425bf9aef4a337e1ddf23d3e29",
-      "binary_sha256": "56c741b2bb0d9da6b706933660868e3803e3493367adda6be5f9d8f71f2d5266"
-    },
-    {
-      "file_name": "tor-expert-bundle-macos-x86_64-15.0.16.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-macos-x86_64-15.0.16.tar.gz",
-      "binary_md5": "8d4b9c875adefb4326645600e9a5816d",
-      "binary_sha256": "492a68168864be3f98efd3cfdac5531e84adbdf8597163aa205cbc2a0c4bccff"
-    },
-    {
-      "file_name": "tor-expert-bundle-windows-i686-15.0.16.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-windows-i686-15.0.16.tar.gz",
-      "daemon_version": "0.4.9.9",
-      "daemon_hash": "8d2ce4b445c267b4a321258035a9c3ba5f75fb88ec60b956a7e75a17ff85c473",
-      "binary_md5": "3f43da64632237d131e22de4c1233d07",
-      "binary_sha256": "8d2ce4b445c267b4a321258035a9c3ba5f75fb88ec60b956a7e75a17ff85c473"
-    },
-    {
-      "file_name": "tor-expert-bundle-windows-x86_64-15.0.16.tar.gz",
-      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-windows-x86_64-15.0.16.tar.gz",
-      "daemon_version": "0.4.9.9",
-      "daemon_hash": "3480b027e2eeda0b6bfaf2f28bde7f3f7038ecf4de3c3862ee9536d1d8451537",
-      "binary_md5": "89d0fd7e7a196e90ceb2e1be53da684f",
-      "binary_sha256": "3480b027e2eeda0b6bfaf2f28bde7f3f7038ecf4de3c3862ee9536d1d8451537"
-    }
-  ]
+    "version": "15.0.16",
+    "files": [
+        {
+            "file_name": "tor-expert-bundle-android-aarch64-15.0.16.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-android-aarch64-15.0.16.tar.gz"
+        },
+        {
+            "file_name": "tor-expert-bundle-android-armv7-15.0.16.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-android-armv7-15.0.16.tar.gz"
+        },
+        {
+            "file_name": "tor-expert-bundle-android-x86-15.0.16.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-android-x86-15.0.16.tar.gz"
+        },
+        {
+            "file_name": "tor-expert-bundle-android-x86_64-15.0.16.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-android-x86_64-15.0.16.tar.gz"
+        },
+        {
+            "file_name": "tor-expert-bundle-linux-i686-15.0.16.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-linux-i686-15.0.16.tar.gz"
+        },
+        {
+            "file_name": "tor-expert-bundle-linux-x86_64-15.0.16.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-linux-x86_64-15.0.16.tar.gz"
+        },
+        {
+            "file_name": "tor-expert-bundle-macos-aarch64-15.0.16.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-macos-aarch64-15.0.16.tar.gz"
+        },
+        {
+            "file_name": "tor-expert-bundle-macos-x86_64-15.0.16.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-macos-x86_64-15.0.16.tar.gz"
+        },
+        {
+            "file_name": "tor-expert-bundle-windows-i686-15.0.16.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-windows-i686-15.0.16.tar.gz"
+        },
+        {
+            "file_name": "tor-expert-bundle-windows-x86_64-15.0.16.tar.gz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.16/tor-expert-bundle-windows-x86_64-15.0.16.tar.gz"
+        }
+    ]
 }
