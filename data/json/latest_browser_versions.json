@@ -1,189 +1,189 @@
 {
-    "version": "15.0.19",
+    "version": "15.0.20",
     "files": [
         {
-            "file_name": "tor-browser-15.0.19-androidTest.apk.idsig",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-15.0.19-androidTest.apk.idsig"
+            "file_name": "tor-browser-15.0.20-androidTest.apk.idsig",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-15.0.20-androidTest.apk.idsig"
         },
         {
-            "file_name": "tor-browser-android-aarch64-15.0.19.apk",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-android-aarch64-15.0.19.apk"
+            "file_name": "tor-browser-android-aarch64-15.0.20.apk",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-android-aarch64-15.0.20.apk"
         },
         {
-            "file_name": "tor-browser-android-armv7-15.0.19.apk",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-android-armv7-15.0.19.apk"
+            "file_name": "tor-browser-android-armv7-15.0.20.apk",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-android-armv7-15.0.20.apk"
         },
         {
-            "file_name": "tor-browser-android-x86-15.0.19.apk",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-android-x86-15.0.19.apk"
+            "file_name": "tor-browser-android-x86-15.0.20.apk",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-android-x86-15.0.20.apk"
         },
         {
-            "file_name": "tor-browser-android-x86_64-15.0.19.apk",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-android-x86_64-15.0.19.apk"
+            "file_name": "tor-browser-android-x86_64-15.0.20.apk",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-android-x86_64-15.0.20.apk"
         },
         {
-            "file_name": "tor-browser-linux-i686--15.0.16-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-linux-i686--15.0.16-15.0.19.incremental.mar"
+            "file_name": "tor-browser-linux-i686--15.0.17-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-linux-i686--15.0.17-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-linux-i686--15.0.17-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-linux-i686--15.0.17-15.0.19.incremental.mar"
+            "file_name": "tor-browser-linux-i686--15.0.18-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-linux-i686--15.0.18-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-linux-i686--15.0.18-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-linux-i686--15.0.18-15.0.19.incremental.mar"
+            "file_name": "tor-browser-linux-i686--15.0.19-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-linux-i686--15.0.19-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-linux-i686-15.0.19.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-linux-i686-15.0.19.mar"
+            "file_name": "tor-browser-linux-i686-15.0.20.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-linux-i686-15.0.20.mar"
         },
         {
-            "file_name": "tor-browser-linux-i686-15.0.19.tar.xz",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-linux-i686-15.0.19.tar.xz"
+            "file_name": "tor-browser-linux-i686-15.0.20.tar.xz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-linux-i686-15.0.20.tar.xz"
         },
         {
-            "file_name": "tor-browser-linux-x86_64--15.0.16-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-linux-x86_64--15.0.16-15.0.19.incremental.mar"
+            "file_name": "tor-browser-linux-x86_64--15.0.17-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-linux-x86_64--15.0.17-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-linux-x86_64--15.0.17-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-linux-x86_64--15.0.17-15.0.19.incremental.mar"
+            "file_name": "tor-browser-linux-x86_64--15.0.18-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-linux-x86_64--15.0.18-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-linux-x86_64--15.0.18-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-linux-x86_64--15.0.18-15.0.19.incremental.mar"
+            "file_name": "tor-browser-linux-x86_64--15.0.19-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-linux-x86_64--15.0.19-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-linux-x86_64-15.0.19.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-linux-x86_64-15.0.19.mar"
+            "file_name": "tor-browser-linux-x86_64-15.0.20.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-linux-x86_64-15.0.20.mar"
         },
         {
-            "file_name": "tor-browser-linux-x86_64-15.0.19.tar.xz",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-linux-x86_64-15.0.19.tar.xz"
+            "file_name": "tor-browser-linux-x86_64-15.0.20.tar.xz",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-linux-x86_64-15.0.20.tar.xz"
         },
         {
-            "file_name": "tor-browser-macos--15.0.16-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-macos--15.0.16-15.0.19.incremental.mar"
+            "file_name": "tor-browser-macos--15.0.17-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-macos--15.0.17-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-macos--15.0.17-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-macos--15.0.17-15.0.19.incremental.mar"
+            "file_name": "tor-browser-macos--15.0.18-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-macos--15.0.18-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-macos--15.0.18-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-macos--15.0.18-15.0.19.incremental.mar"
+            "file_name": "tor-browser-macos--15.0.19-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-macos--15.0.19-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-macos-15.0.19.dmg",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-macos-15.0.19.dmg"
+            "file_name": "tor-browser-macos-15.0.20.dmg",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-macos-15.0.20.dmg"
         },
         {
-            "file_name": "tor-browser-macos-15.0.19.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-macos-15.0.19.mar"
+            "file_name": "tor-browser-macos-15.0.20.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-macos-15.0.20.mar"
         },
         {
-            "file_name": "tor-browser-noopt-android-aarch64-15.0.19.apk.idsig",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-noopt-android-aarch64-15.0.19.apk.idsig"
+            "file_name": "tor-browser-noopt-android-aarch64-15.0.20.apk.idsig",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-noopt-android-aarch64-15.0.20.apk.idsig"
         },
         {
-            "file_name": "tor-browser-noopt-android-armv7-15.0.19.apk.idsig",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-noopt-android-armv7-15.0.19.apk.idsig"
+            "file_name": "tor-browser-noopt-android-armv7-15.0.20.apk.idsig",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-noopt-android-armv7-15.0.20.apk.idsig"
         },
         {
-            "file_name": "tor-browser-noopt-android-x86-15.0.19.apk.idsig",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-noopt-android-x86-15.0.19.apk.idsig"
+            "file_name": "tor-browser-noopt-android-x86-15.0.20.apk.idsig",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-noopt-android-x86-15.0.20.apk.idsig"
         },
         {
-            "file_name": "tor-browser-noopt-android-x86_64-15.0.19.apk.idsig",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-noopt-android-x86_64-15.0.19.apk.idsig"
+            "file_name": "tor-browser-noopt-android-x86_64-15.0.20.apk.idsig",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-noopt-android-x86_64-15.0.20.apk.idsig"
         },
         {
-            "file_name": "tor-browser-qa-android-aarch64-15.0.19.apk",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-qa-android-aarch64-15.0.19.apk"
+            "file_name": "tor-browser-qa-android-aarch64-15.0.20.apk",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-qa-android-aarch64-15.0.20.apk"
         },
         {
-            "file_name": "tor-browser-qa-android-aarch64-15.0.19.apk.idsig",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-qa-android-aarch64-15.0.19.apk.idsig"
+            "file_name": "tor-browser-qa-android-aarch64-15.0.20.apk.idsig",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-qa-android-aarch64-15.0.20.apk.idsig"
         },
         {
-            "file_name": "tor-browser-qa-android-armv7-15.0.19.apk",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-qa-android-armv7-15.0.19.apk"
+            "file_name": "tor-browser-qa-android-armv7-15.0.20.apk",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-qa-android-armv7-15.0.20.apk"
         },
         {
-            "file_name": "tor-browser-qa-android-armv7-15.0.19.apk.idsig",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-qa-android-armv7-15.0.19.apk.idsig"
+            "file_name": "tor-browser-qa-android-armv7-15.0.20.apk.idsig",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-qa-android-armv7-15.0.20.apk.idsig"
         },
         {
-            "file_name": "tor-browser-qa-android-x86-15.0.19.apk",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-qa-android-x86-15.0.19.apk"
+            "file_name": "tor-browser-qa-android-x86-15.0.20.apk",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-qa-android-x86-15.0.20.apk"
         },
         {
-            "file_name": "tor-browser-qa-android-x86-15.0.19.apk.idsig",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-qa-android-x86-15.0.19.apk.idsig"
+            "file_name": "tor-browser-qa-android-x86-15.0.20.apk.idsig",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-qa-android-x86-15.0.20.apk.idsig"
         },
         {
-            "file_name": "tor-browser-qa-android-x86_64-15.0.19.apk",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-qa-android-x86_64-15.0.19.apk"
+            "file_name": "tor-browser-qa-android-x86_64-15.0.20.apk",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-qa-android-x86_64-15.0.20.apk"
         },
         {
-            "file_name": "tor-browser-qa-android-x86_64-15.0.19.apk.idsig",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-qa-android-x86_64-15.0.19.apk.idsig"
+            "file_name": "tor-browser-qa-android-x86_64-15.0.20.apk.idsig",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-qa-android-x86_64-15.0.20.apk.idsig"
         },
         {
-            "file_name": "tor-browser-qa-unsign-android-aarch64-15.0.19.bspatch",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-qa-unsign-android-aarch64-15.0.19.bspatch"
+            "file_name": "tor-browser-qa-unsign-android-aarch64-15.0.20.bspatch",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-qa-unsign-android-aarch64-15.0.20.bspatch"
         },
         {
-            "file_name": "tor-browser-qa-unsign-android-armv7-15.0.19.bspatch",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-qa-unsign-android-armv7-15.0.19.bspatch"
+            "file_name": "tor-browser-qa-unsign-android-armv7-15.0.20.bspatch",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-qa-unsign-android-armv7-15.0.20.bspatch"
         },
         {
-            "file_name": "tor-browser-qa-unsign-android-x86-15.0.19.bspatch",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-qa-unsign-android-x86-15.0.19.bspatch"
+            "file_name": "tor-browser-qa-unsign-android-x86-15.0.20.bspatch",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-qa-unsign-android-x86-15.0.20.bspatch"
         },
         {
-            "file_name": "tor-browser-qa-unsign-android-x86_64-15.0.19.bspatch",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-qa-unsign-android-x86_64-15.0.19.bspatch"
+            "file_name": "tor-browser-qa-unsign-android-x86_64-15.0.20.bspatch",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-qa-unsign-android-x86_64-15.0.20.bspatch"
         },
         {
-            "file_name": "tor-browser-windows-i686--15.0.16-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-windows-i686--15.0.16-15.0.19.incremental.mar"
+            "file_name": "tor-browser-windows-i686--15.0.17-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-windows-i686--15.0.17-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-windows-i686--15.0.17-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-windows-i686--15.0.17-15.0.19.incremental.mar"
+            "file_name": "tor-browser-windows-i686--15.0.18-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-windows-i686--15.0.18-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-windows-i686--15.0.18-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-windows-i686--15.0.18-15.0.19.incremental.mar"
+            "file_name": "tor-browser-windows-i686--15.0.19-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-windows-i686--15.0.19-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-windows-i686-15.0.19.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-windows-i686-15.0.19.mar"
+            "file_name": "tor-browser-windows-i686-15.0.20.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-windows-i686-15.0.20.mar"
         },
         {
-            "file_name": "tor-browser-windows-i686-portable-15.0.19.exe",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-windows-i686-portable-15.0.19.exe"
+            "file_name": "tor-browser-windows-i686-portable-15.0.20.exe",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-windows-i686-portable-15.0.20.exe"
         },
         {
-            "file_name": "tor-browser-windows-x86_64--15.0.16-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-windows-x86_64--15.0.16-15.0.19.incremental.mar"
+            "file_name": "tor-browser-windows-x86_64--15.0.17-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-windows-x86_64--15.0.17-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-windows-x86_64--15.0.17-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-windows-x86_64--15.0.17-15.0.19.incremental.mar"
+            "file_name": "tor-browser-windows-x86_64--15.0.18-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-windows-x86_64--15.0.18-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-windows-x86_64--15.0.18-15.0.19.incremental.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-windows-x86_64--15.0.18-15.0.19.incremental.mar"
+            "file_name": "tor-browser-windows-x86_64--15.0.19-15.0.20.incremental.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-windows-x86_64--15.0.19-15.0.20.incremental.mar"
         },
         {
-            "file_name": "tor-browser-windows-x86_64-15.0.19.mar",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-windows-x86_64-15.0.19.mar"
+            "file_name": "tor-browser-windows-x86_64-15.0.20.mar",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-windows-x86_64-15.0.20.mar"
         },
         {
-            "file_name": "tor-browser-windows-x86_64-portable-15.0.19.exe",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.19/tor-browser-windows-x86_64-portable-15.0.19.exe"
+            "file_name": "tor-browser-windows-x86_64-portable-15.0.20.exe",
+            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/15.0.20/tor-browser-windows-x86_64-portable-15.0.20.exe"
         }
     ]
 }
