@@ -1,17 +1,17 @@
 {
-    "version": "16.0.2",
-    "files": [
-        {
-            "file_name": "tor-expert-bundle-android-aarch64-16.0.2.tar.gz",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/16.0.2/tor-expert-bundle-android-aarch64-16.0.2.tar.gz"
-        },
-        {
-            "file_name": "tor-expert-bundle-android-armv7-16.0.2.tar.gz",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/16.0.2/tor-expert-bundle-android-armv7-16.0.2.tar.gz"
-        },
-        {
-            "file_name": "tor-expert-bundle-android-x86_64-16.0.2.tar.gz",
-            "url": "https://archive.torproject.org/tor-package-archive/torbrowser/16.0.2/tor-expert-bundle-android-x86_64-16.0.2.tar.gz"
-        }
-    ]
+  "version": "16.0.2",
+  "files": [
+    {
+      "file_name": "tor-expert-bundle-android-aarch64-16.0.2.tar.gz",
+      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/16.0.2/tor-expert-bundle-android-aarch64-16.0.2.tar.gz"
+    },
+    {
+      "file_name": "tor-expert-bundle-android-armv7-16.0.2.tar.gz",
+      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/16.0.2/tor-expert-bundle-android-armv7-16.0.2.tar.gz"
+    },
+    {
+      "file_name": "tor-expert-bundle-android-x86_64-16.0.2.tar.gz",
+      "url": "https://archive.torproject.org/tor-package-archive/torbrowser/16.0.2/tor-expert-bundle-android-x86_64-16.0.2.tar.gz"
+    }
+  ]
 }
